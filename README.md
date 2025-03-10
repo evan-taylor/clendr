@@ -56,5 +56,3 @@ Create personalized booking links that reflect your true availability, respectin
 ### Calendar Intelligence
 
 Clendr learns from your habits and preferences to provide insights that help you optimize your time. Discover when you're most productive, which meetings could be emails, and how to build better scheduling habits.
-
-
