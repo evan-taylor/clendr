@@ -1,8 +1,14 @@
-import { ReactNode, useRef, useEffect } from 'react';
+import { ReactNode, useRef, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import WaitlistForm from './WaitlistForm';
 import AnimatedBackground from './AnimatedBackground';
-import FloatingShapes from './FloatingShapes';
+import dynamic from 'next/dynamic';
+
+// Import FloatingShapes with no SSR
+const FloatingShapes = dynamic(() => import('./FloatingShapes'), { 
+  ssr: false,
+  loading: () => null
+});
 
 interface HeroProps {
   title: ReactNode;
@@ -76,8 +82,10 @@ export const Hero = ({ title, subtitle, className = '' }: HeroProps) => {
       {/* Animated background */}
       <AnimatedBackground variant="gradient" />
       
-      {/* Floating 3D shapes - reduced count for less visual intensity */}
-      <FloatingShapes count={6} intensity={0.03} />
+      {/* Floating background shapes */}
+      <Suspense fallback={null}>
+        <FloatingShapes count={6} intensity={0.03} />
+      </Suspense>
       
       <div className="container mx-auto px-4 py-20 md:py-28 relative z-10">
         {/* Center title and subtitle in their own row */}

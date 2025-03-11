@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useEffect, useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
@@ -10,38 +12,48 @@ interface FloatingShapesProps {
 const FloatingShapes = ({ className = '', count = 5, intensity = 0.02 }: FloatingShapesProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [shapes, setShapes] = useState<any[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
   
-  // Create shapes
-  const shapes = Array.from({ length: count }).map((_, index) => {
-    const size = Math.floor(Math.random() * 70) + 30; // between 30px and 100px
-    const shape = Math.random() > 0.5 ? 'circle' : 'square';
-    const xPos = Math.random() * 100;
-    const yPos = Math.random() * 100;
-    const zIndex = Math.floor(Math.random() * 3) - 1;
-    const depth = Math.random() * 0.15 + 0.05; // Reduced depth for less movement
-    const gradient = [
-      'from-primary-500 to-teal-500',
-      'from-teal-500 to-blue-500',
-      'from-blue-500 to-green-500',
-      'from-green-500 to-primary-500',
-    ][Math.floor(Math.random() * 4)];
+  // Generate shapes after component mounts to ensure server/client consistency
+  useEffect(() => {
+    // Only run on the client
+    setIsMounted(true);
     
-    const delayMultiplier = Math.random() * 5;
-    const durationMultiplier = Math.random() * 10 + 20; // Increased duration for much slower animations
+    // Create shapes
+    const generatedShapes = Array.from({ length: count }).map((_, index) => {
+      const size = Math.floor(Math.random() * 70) + 30; // between 30px and 100px
+      const shape = Math.random() > 0.5 ? 'circle' : 'square';
+      const xPos = Math.random() * 100;
+      const yPos = Math.random() * 100;
+      const zIndex = Math.floor(Math.random() * 3) - 1;
+      const depth = Math.random() * 0.15 + 0.05; // Reduced depth for less movement
+      const gradient = [
+        'from-primary-500 to-teal-500',
+        'from-teal-500 to-blue-500',
+        'from-blue-500 to-green-500',
+        'from-green-500 to-primary-500',
+      ][Math.floor(Math.random() * 4)];
+      
+      const delayMultiplier = Math.random() * 5;
+      const durationMultiplier = Math.random() * 10 + 20; // Increased duration for much slower animations
+      
+      return {
+        id: index,
+        size,
+        shape,
+        xPos,
+        yPos,
+        zIndex,
+        depth,
+        gradient,
+        delayMultiplier,
+        durationMultiplier,
+      };
+    });
     
-    return {
-      id: index,
-      size,
-      shape,
-      xPos,
-      yPos,
-      zIndex,
-      depth,
-      gradient,
-      delayMultiplier,
-      durationMultiplier,
-    };
-  });
+    setShapes(generatedShapes);
+  }, [count]);
   
   // Mouse parallax effect - throttled to improve performance
   useEffect(() => {
@@ -76,6 +88,11 @@ const FloatingShapes = ({ className = '', count = 5, intensity = 0.02 }: Floatin
       window.removeEventListener('mousemove', throttledHandler);
     };
   }, []);
+  
+  // Don't render anything on the server or until mounted on client
+  if (!isMounted) {
+    return <div className={`${className} absolute inset-0 overflow-hidden pointer-events-none`}></div>;
+  }
   
   return (
     <div
