@@ -52,7 +52,7 @@ export default function Custom404() {
               <ul className="list-disc list-inside mt-4 text-left max-w-lg mx-auto">
                 <li className="mb-2">Clearing your browser cache</li>
                 <li className="mb-2">Running the fix-static-assets.sh script in the terminal</li>
-                <li className="mb-2">Opening the browser console and running <code className="bg-gray-200 dark:bg-gray-800 px-2 py-1 rounded">fetch('/clear-cache.js').then(r => r.text()).then(eval)</code></li>
+                <li className="mb-2">Opening the browser console and running <code className="bg-gray-200 dark:bg-gray-800 px-2 py-1 rounded">fetch('/clear-cache.js').then(r {'=>'} r.text()).then(eval)</code></li>
               </ul>
             </div>
           </motion.div>
