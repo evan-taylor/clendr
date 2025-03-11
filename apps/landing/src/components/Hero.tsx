@@ -105,7 +105,7 @@ export const Hero = ({ title, subtitle, className = '' }: HeroProps) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Features and Form in separate columns */}
-          <div className="lg:col-span-6 max-w-xl mx-auto lg:mx-0">
+          <div className="lg:col-span-6 max-w-xl mx-auto">
             {/* Feature highlights */}
             <div className="grid grid-cols-2 gap-4 mb-10">
               {[
@@ -131,7 +131,7 @@ export const Hero = ({ title, subtitle, className = '' }: HeroProps) => {
             
             {/* Waitlist Button */}
             <motion.div 
-              className="relative text-center lg:text-left"
+              className="relative flex justify-center"
               initial="hidden"
               animate="visible"
               custom={2}
