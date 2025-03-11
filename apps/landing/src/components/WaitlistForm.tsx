@@ -111,15 +111,15 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
   return (
     <motion.form 
       onSubmit={handleSubmit} 
-      className={`${className} transition-all relative z-10`}
+      className={`${className} transition-all relative z-10 text-left`}
       aria-label="Waitlist signup form"
       variants={formVariants}
       initial="hidden"
       animate="visible"
     >
       <div className="flex flex-col space-y-5">
-        <motion.div variants={itemVariants}>
-          <label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+        <motion.div variants={itemVariants} className="text-left">
+          <label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block text-left">
             Your Name
           </label>
           <div className="relative">
@@ -132,7 +132,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
               required
               aria-label="Full name"
               aria-required="true"
-              className="fancy-input pr-10"
+              className="fancy-input pr-10 text-left"
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -142,8 +142,8 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants}>
-          <label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+        <motion.div variants={itemVariants} className="text-left">
+          <label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block text-left">
             Email Address
           </label>
           <div className="relative">
@@ -157,7 +157,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
               aria-label="Email address"
               aria-required="true"
               aria-invalid={!!error}
-              className="fancy-input pr-10"
+              className="fancy-input pr-10 text-left"
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
