@@ -1,0 +1,42 @@
+{
+  "name": "clendr",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "description": "The lightning-fast AI-powered calendar app that transforms how you schedule your time.",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "latest"
+  },
+  "packageManager": "npm@9.6.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evan-taylor/clendr.git"
+  },
+  "keywords": [
+    "calendar",
+    "scheduling",
+    "ai",
+    "productivity"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/evan-taylor/clendr/issues"
+  },
+  "homepage": "https://github.com/evan-taylor/clendr#readme"
+}
