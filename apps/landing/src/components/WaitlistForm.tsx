@@ -172,7 +172,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
             type="submit"
             disabled={isSubmitting}
             aria-label={isSubmitting ? 'Joining waitlist...' : 'Join waitlist'}
-            className="cta-button w-full"
+            className="cta-button w-full flex items-center justify-center"
           >
             {isSubmitting ? (
               <div className="flex items-center justify-center">
