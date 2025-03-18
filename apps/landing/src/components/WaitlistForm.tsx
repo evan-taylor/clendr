@@ -74,21 +74,21 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
         animate={{ height: 'auto', opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.215, 0.61, 0.355, 1.0] }}
       >
-        <div className="bg-green-50/80 dark:bg-green-900/20 backdrop-blur-sm border border-green-200/50 dark:border-green-800/30 rounded-xl p-8 text-center transition-all duration-300 shadow-lg">
+        <div className="glass-effect-card p-8 text-center transition-all duration-300 shadow-dark">
           <motion.div 
             className="flex items-center justify-center mb-6"
             initial={{ scale: 0 }}
             animate={{ scale: 1, rotate: [0, 5, -5, 0] }}
             transition={{ type: "spring", stiffness: 200, damping: 10, duration: 0.8 }}
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-green-200 to-green-300 dark:from-green-700 dark:to-green-600 rounded-full flex items-center justify-center shadow-lg">
-              <svg className="w-8 h-8 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <div className="w-16 h-16 bg-zinc-800/80 rounded-full flex items-center justify-center glass-icon">
+              <svg className="w-8 h-8 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
           </motion.div>
           <motion.h3 
-            className="text-2xl font-bold text-green-800 dark:text-green-300 mb-3"
+            className="text-2xl font-bold text-zinc-200 mb-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
@@ -96,7 +96,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
             You're on the List!
           </motion.h3>
           <motion.p 
-            className="text-lg text-green-700 dark:text-green-400"
+            className="text-lg text-zinc-400"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
@@ -132,7 +132,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
               required
               aria-label="Full name"
               aria-required="true"
-              className="fancy-input pr-10 text-left"
+              className="sophisticated-input w-full"
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +157,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
               aria-label="Email address"
               aria-required="true"
               aria-invalid={!!error}
-              className="fancy-input pr-10 text-left"
+              className="sophisticated-input w-full"
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -190,14 +190,14 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
         
         {error && (
           <motion.div 
-            className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-lg p-4 text-red-600 dark:text-red-400 text-sm"
+            className="bg-zinc-900/60 border border-zinc-700/60 rounded-lg p-4 text-zinc-300 text-sm"
             role="alert"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
           >
             <div className="flex">
-              <svg className="h-5 w-5 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg className="h-5 w-5 text-zinc-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>{error}</span>

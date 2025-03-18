@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles can be added here */
+/* Custom styles for sophisticated dark landing page */
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -10,7 +10,7 @@
   }
   
   body {
-    @apply antialiased text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 font-sans;
+    @apply antialiased text-zinc-100 bg-zinc-950 font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow-x: hidden;
   }
@@ -33,50 +33,78 @@
 }
 
 @layer components {
-  /* Gradient text */
-  .gradient-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-primary-500 to-green-500;
-    background-size: 200% 200%;
-    animation: gradient-x 15s ease infinite;
+  /* Elegant text styles */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100;
   }
   
-  /* 3D Floating Card */
+  /* Sophisticated button styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center text-zinc-950 rounded-md font-medium transition duration-300
+           bg-zinc-100 hover:bg-white
+           shadow-md hover:shadow-lg focus:ring-2 focus:ring-zinc-400/50 focus:outline-none;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center text-zinc-100 bg-transparent rounded-md font-medium transition duration-300
+           border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-900/30 backdrop-blur-sm
+           shadow-sm hover:shadow-md focus:ring-2 focus:ring-zinc-700/50 focus:outline-none;
+  }
+  
+  /* Floating Card */
   .floating-card {
     @apply relative transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl;
     transform-style: preserve-3d;
     perspective: 1000px;
   }
   
-  /* Fancy Input Styling - updated for more subtle look */
-  .fancy-input {
-    @apply w-full px-4 py-3 bg-white/80 dark:bg-gray-800/40 border border-gray-200/80 dark:border-gray-700/50 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-800/30 focus:border-primary-300 dark:focus:border-primary-700 focus:outline-none transition duration-200 backdrop-blur-sm;
+  /* Sophisticated Input Styling */
+  .sophisticated-input {
+    @apply w-full px-4 py-3 bg-zinc-900/80 border border-zinc-800/80 rounded-md 
+           shadow-sm focus:ring-2 focus:ring-zinc-500/30 focus:border-zinc-600/50 
+           focus:outline-none transition duration-200 backdrop-blur-sm text-zinc-100;
   }
   
-  /* Call to Action Button - updated for more subtle look */
+  /* Elegant CTA button */
   .cta-button {
-    @apply px-6 py-3 bg-gradient-to-r from-primary-600/90 to-teal-600/90 hover:from-primary-600 hover:to-teal-600 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-gray-900;
+    @apply px-6 py-3 rounded-md font-medium text-zinc-950 transition duration-300 
+           bg-zinc-100 hover:bg-white inline-flex items-center
+           shadow-lg hover:shadow-xl;
   }
   
-  /* Shadow Glow Effect */
-  .shadow-glow {
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+  /* Subtle glow shadow */
+  .shadow-subtle {
+    box-shadow: 0 8px 30px -10px rgba(0, 0, 0, 0.3), 
+                0 5px 15px -5px rgba(0, 0, 0, 0.2);
   }
   
-  /* Card with glassmorphism effect */
+  /* Elegant glass card */
   .glass-card {
-    @apply bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-xl shadow-lg;
+    @apply rounded-xl border border-zinc-800/50 bg-zinc-900/30 backdrop-blur-md
+           shadow-subtle p-6;
   }
-}
-
-@layer utilities {
+  
+  /* Larger glass card with more padding for CTAs */
+  .glass-effect-card {
+    @apply rounded-xl border border-zinc-800/50 bg-zinc-900/20 backdrop-blur-md
+           shadow-subtle p-8 md:p-12;
+  }
+  
+  /* Glass icon for use in header and buttons */
+  .glass-icon {
+    @apply bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/30;
+  }
+  
+  /* Text shadow for headings */
   .text-shadow {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
   
   .text-shadow-lg {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
-
+  
+  /* Animation delay classes */
   .animation-delay-500 {
     animation-delay: 500ms;
   }
@@ -93,52 +121,299 @@
     animation-delay: 2000ms;
   }
   
-  /* Mouse parallax effects */
+  .animation-delay-4000 {
+    animation-delay: 4000ms;
+  }
+  
+  /* Parallax effect for hero elements */
   .parallax {
-    transition: transform 0.1s ease-out;
+    will-change: transform;
   }
   
   .parallax-fast {
-    transition: transform 0.05s ease-out;
+    will-change: transform;
+    transform: translateZ(0);
   }
   
   .parallax-slow {
-    transition: transform 0.2s ease-out;
+    will-change: transform;
+    transform: translateZ(0);
   }
   
-  /* Shimmer effect */
+  /* Subtle shimmer animation */
   .shimmer {
-    background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0) 0%, 
-      rgba(255, 255, 255, 0.2) 25%, 
-      rgba(255, 255, 255, 0.2) 50%, 
-      rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(
+      to right,
+      rgba(244, 244, 245, 0) 0%,
+      rgba(244, 244, 245, 0.1) 50%,
+      rgba(244, 244, 245, 0) 100%
+    );
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
   }
   
-  /* Gradient border */
+  @keyframes shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+  
+  /* Sophisticated gradient border */
   .gradient-border {
     position: relative;
-    border-radius: inherit;
+    border-radius: 0.5rem;
+    background-clip: padding-box;
+    background-color: #18181b;
+    padding: 1px;
   }
   
   .gradient-border::before {
     content: '';
     position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    margin: -1px;
     border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(45deg, #6366f1, #10b981, #14b8a6);
-    -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: 0;
+    background: linear-gradient(
+      to bottom right,
+      rgba(244, 244, 245, 0.2),
+      rgba(244, 244, 245, 0.05) 30%,
+      rgba(244, 244, 245, 0)
+    );
+  }
+  
+  /* Gradient animations */
+  @keyframes gradient-x {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes gradient-y {
+    0% { background-position: 50% 0%; }
+    50% { background-position: 50% 100%; }
+    100% { background-position: 50% 0%; }
+  }
+  
+  .animate-gradient-x-slow {
+    animation: gradient-x 15s ease infinite;
+    background-size: 400% 400%;
+  }
+  
+  .animate-gradient-y-slow {
+    animation: gradient-y 15s ease infinite;
+    background-size: 400% 400%;
+  }
+  
+  /* Very slow pulse animation */
+  @keyframes pulse-very-slow {
+    0% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-pulse-very-slow {
+    animation: pulse-very-slow 8s ease-in-out infinite;
+  }
+  
+  /* Sophisticated grid background */
+  .bg-grid {
+    background-size: 50px 50px;
+    background-image:
+      linear-gradient(to right, rgba(244, 244, 245, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(244, 244, 245, 0.02) 1px, transparent 1px);
+  }
+  
+  /* Noise texture overlay */
+  .noise-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.08;
+    mix-blend-mode: overlay;
     pointer-events: none;
   }
-} 
+  
+  /* Cursor dot - for cursor following effect */
+  .cursor-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    mix-blend-mode: screen;
+  }
+  
+  /* Cursor circle - for cursor following effect */
+  .cursor-circle {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    backdrop-filter: blur(1px);
+  }
+  
+  /* Cursor trail elements */
+  .cursor-trail {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    mix-blend-mode: screen;
+    filter: blur(1px);
+  }
+  
+  /* Cursor text styling */
+  .cursor-text {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transform: translateY(-50%);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+  }
+  
+  /* Magnetic effect animation */
+  .cursor-magnetic-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+  }
+  
+  /* Particle canvas */
+  .particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.5;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .text-shadow-lg {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Hide default cursor */
+  .hide-cursor, 
+  .hide-cursor * {
+    cursor: none !important;
+  }
+  
+  .text-shadow-sm {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  }
+  
+  .text-shadow-md {
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .text-shadow-xl {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+  
+  /* Interactive elements for cursor effects */
+  .interactive {
+    cursor: pointer;
+  }
+  
+  /* Shadow styles */
+  .shadow-dark {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Animated underline effect */
+  .hover-underline {
+    position: relative;
+  }
+  
+  .hover-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transition: width 0.3s ease;
+  }
+  
+  .hover-underline:hover::after {
+    width: 100%;
+  }
+  
+  /* Glassmorphism utilities */
+  .glass-effect {
+    background: rgba(24, 24, 27, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .glass-effect-dark {
+    background: rgba(15, 15, 17, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+  
+  .glass-highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0)
+    );
+  }
+}

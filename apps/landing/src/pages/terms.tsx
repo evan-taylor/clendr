@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 export default function Terms() {
   const fadeIn = {
@@ -25,10 +26,11 @@ export default function Terms() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+      <div className="min-h-screen bg-zinc-950 text-zinc-100 relative overflow-hidden">
+        <AnimatedBackground />
         <Header />
         
-        <main className="container mx-auto px-4 py-16 md:py-24">
+        <main className="container mx-auto px-4 py-32 relative z-10">
           <motion.div 
             className="max-w-3xl mx-auto"
             initial="hidden"
@@ -43,93 +45,63 @@ export default function Terms() {
               }
             }}
           >
-            <motion.h1 
-              className="text-4xl md:text-5xl font-bold mb-8 font-geist"
-              variants={fadeIn}
-            >
-              Terms & Conditions
-            </motion.h1>
-            
             <motion.div 
-              className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-geist prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-a:no-underline hover:prose-a:underline"
+              className="glass-effect-card p-8 rounded-xl"
               variants={fadeIn}
             >
-              <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl mb-8 border border-gray-100 dark:border-gray-700">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+              <motion.h1 
+                className="text-4xl md:text-5xl font-bold mb-8 font-geist text-zinc-100"
+                variants={fadeIn}
+              >
+                Terms & Conditions
+              </motion.h1>
+
+              <div className="bg-zinc-800/30 p-6 rounded-xl mb-8 border border-zinc-800">
+                <p className="text-sm text-zinc-400">
                   Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                 </p>
               </div>
-              
-              <h2>1. Introduction</h2>
-              <p>
-                Welcome to Clendr ("Company," "we," "our," "us")! As you have just clicked our Terms of Service, please pause, grab a cup of coffee and carefully read the following pages. It will take you approximately 20 minutes.
-              </p>
-              <p>
-                These Terms of Service ("Terms," "Terms of Service") govern your use of our web pages located at clendr.app and our mobile application Clendr (together or individually "Service") operated by Clendr Inc.
-              </p>
-              <p>
-                Our Privacy Policy also governs your use of our Service and explains how we collect, safeguard and disclose information that results from your use of our web pages. Please read it here: <a href="/privacy">Privacy Policy</a>.
-              </p>
-              <p>
-                Your agreement with us includes these Terms and our Privacy Policy ("Agreements"). You acknowledge that you have read and understood Agreements, and agree to be bound by them.
-              </p>
-              <p>
-                If you do not agree with (or cannot comply with) Agreements, then you may not use the Service, but please let us know by emailing at support@clendr.app so we can try to find a solution. These Terms apply to all visitors, users and others who wish to access or use Service.
-              </p>
-              
-              <h2>2. Communications</h2>
-              <p>
-                By using our Service, you agree to subscribe to newsletters, marketing or promotional materials and other information we may send. However, you may opt out of receiving any, or all, of these communications from us by following the unsubscribe link or by emailing at support@clendr.app.
-              </p>
-              
-              <h2>3. Purchases</h2>
-              <p>
-                If you wish to purchase any product or service made available through Service ("Purchase"), you may be asked to supply certain information relevant to your Purchase including, without limitation, your credit card number, the expiration date of your credit card, your billing address, and your shipping information.
-              </p>
-              <p>
-                You represent and warrant that: (i) you have the legal right to use any credit card(s) or other payment method(s) in connection with any Purchase; and that (ii) the information you supply to us is true, correct and complete.
-              </p>
-              <p>
-                We may employ the use of third-party services for the purpose of facilitating payment and the completion of Purchases. By submitting your information, you grant us the right to provide the information to these third parties subject to our Privacy Policy.
-              </p>
-              <p>
-                We reserve the right to refuse or cancel your order at any time for reasons including but not limited to: product or service availability, errors in the description or price of the product or service, error in your order or other reasons.
-              </p>
-              <p>
-                We reserve the right to refuse or cancel your order if fraud or an unauthorized or illegal transaction is suspected.
-              </p>
-              
-              <h2>4. Subscriptions</h2>
-              <p>
-                Some parts of Service are billed on a subscription basis ("Subscription(s)"). You will be billed in advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set either on a monthly or annual basis, depending on the type of subscription plan you select when purchasing a Subscription.
-              </p>
-              <p>
-                At the end of each Billing Cycle, your Subscription will automatically renew under the exact same conditions unless you cancel it or Clendr Inc. cancels it. You may cancel your Subscription renewal either through your online account management page or by contacting Clendr Inc. customer support team.
-              </p>
-              
-              <h2>5. Free Trial</h2>
-              <p>
-                Clendr Inc. may, at its sole discretion, offer a Subscription with a free trial for a limited period of time ("Free Trial").
-              </p>
-              <p>
-                You may be required to enter your billing information in order to sign up for Free Trial.
-              </p>
-              <p>
-                If you do enter your billing information when signing up for Free Trial, you will not be charged by Clendr Inc. until Free Trial has expired. On the last day of Free Trial period, unless you cancelled your Subscription, you will be automatically charged the applicable subscription fee for the type of Subscription you have selected.
-              </p>
-              <p>
-                At any time and without notice, Clendr Inc. reserves the right to (i) modify Terms of Service of Free Trial offer, or (ii) cancel such Free Trial offer.
-              </p>
-              
-              <h2>6. Intellectual Property</h2>
-              <p>
-                Service and its original content (excluding Content provided by users), features and functionality are and will remain the exclusive property of Clendr Inc. and its licensors. Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Clendr Inc.
-              </p>
-              
-              <h2>7. Contact Us</h2>
-              <p>
-                If you have any questions about these Terms, please <a href="/contact">contact us</a>.
-              </p>
+
+              <div className="prose prose-zinc prose-invert max-w-none">
+                <motion.h2 variants={fadeIn} className="text-zinc-100">1. Acceptance of Terms</motion.h2>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  By accessing or using the Clendr calendar application ("Service"), you agree to be bound by these Terms and Conditions ("Terms") and our Privacy Policy. If you disagree with any part of the terms, then you may not access the Service.
+                </motion.p>
+
+                <motion.h2 variants={fadeIn} className="text-zinc-100">2. Description of Service</motion.h2>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  Clendr provides a calendar and scheduling service that allows users to create, manage, and share calendar events and schedules. The specific features and functionality may change over time.
+                </motion.p>
+
+                <motion.h2 variants={fadeIn} className="text-zinc-100">3. User Accounts</motion.h2>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  When you create an account with us, you must provide accurate, complete, and current information. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account.
+                </motion.p>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  You are responsible for safeguarding the password and for all activities that occur under your account. You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.
+                </motion.p>
+
+                <motion.h2 variants={fadeIn} className="text-zinc-100">4. Intellectual Property</motion.h2>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  The Service and its original content, features, and functionality are and will remain the exclusive property of Clendr Inc. and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Clendr Inc.
+                </motion.p>
+
+                <motion.h2 variants={fadeIn} className="text-zinc-100">5. Free Trial</motion.h2>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  Clendr Inc. may, at its sole discretion, offer a free trial subscription for a limited period of time. You may be required to enter your billing information to sign up for Free Trial.
+                </motion.p>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  If you do enter your billing information when signing up for Free Trial, you will not be charged by Clendr Inc. until Free Trial has expired. On the last day of Free Trial period, unless you cancelled your Subscription, you will be automatically charged the applicable subscription fee for the type of Subscription you have selected.
+                </motion.p>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  At any time and without notice, Clendr Inc. reserves the right to (i) modify Terms of Service of Free Trial offer, or (ii) cancel such Free Trial offer.
+                </motion.p>
+
+                <motion.h2 variants={fadeIn} className="text-zinc-100">6. Contact Us</motion.h2>
+                <motion.p variants={fadeIn} className="text-zinc-300">
+                  If you have any questions about these Terms, please contact us at terms@clendr.com.
+                </motion.p>
+              </div>
             </motion.div>
           </motion.div>
         </main>

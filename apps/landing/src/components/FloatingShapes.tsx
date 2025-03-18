@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface FloatingShapesProps {
   className?: string;
@@ -22,21 +22,23 @@ const FloatingShapes = ({ className = '', count = 5, intensity = 0.02 }: Floatin
     
     // Create shapes
     const generatedShapes = Array.from({ length: count }).map((_, index) => {
-      const size = Math.floor(Math.random() * 70) + 30; // between 30px and 100px
-      const shape = Math.random() > 0.5 ? 'circle' : 'square';
+      const size = Math.floor(Math.random() * 60) + 20; // between 20px and 80px - smaller shapes
+      const shape = Math.random() > 0.7 ? 'circle' : 'square'; // more squares than circles
       const xPos = Math.random() * 100;
       const yPos = Math.random() * 100;
       const zIndex = Math.floor(Math.random() * 3) - 1;
-      const depth = Math.random() * 0.15 + 0.05; // Reduced depth for less movement
+      const depth = Math.random() * 0.1 + 0.03; // Even more reduced depth for minimal movement
+      
+      // Much lighter color gradients
       const gradient = [
-        'from-primary-500 to-teal-500',
-        'from-teal-500 to-blue-500',
-        'from-blue-500 to-green-500',
-        'from-green-500 to-primary-500',
+        'from-primary-100 to-blue-100',
+        'from-blue-100 to-teal-100',
+        'from-teal-100 to-primary-100',
+        'from-gray-100 to-white',
       ][Math.floor(Math.random() * 4)];
       
       const delayMultiplier = Math.random() * 5;
-      const durationMultiplier = Math.random() * 10 + 20; // Increased duration for much slower animations
+      const durationMultiplier = Math.random() * 15 + 30; // Even longer duration for extremely slow animations
       
       return {
         id: index,
@@ -76,7 +78,7 @@ const FloatingShapes = ({ className = '', count = 5, intensity = 0.02 }: Floatin
     let lastTime = 0;
     const throttledHandler = (e: MouseEvent) => {
       const now = Date.now();
-      if (now - lastTime >= 100) { // Only process every 100ms (increased from 50ms)
+      if (now - lastTime >= 150) { // Only process every 150ms (increased for even less frequent updates)
         lastTime = now;
         handleMouseMove(e);
       }
@@ -102,7 +104,7 @@ const FloatingShapes = ({ className = '', count = 5, intensity = 0.02 }: Floatin
       {shapes.map((shape) => (
         <motion.div
           key={shape.id}
-          className={`absolute opacity-70 backdrop-blur-sm ${
+          className={`absolute ${
             shape.shape === 'circle' ? 'rounded-full' : 'rounded-xl'
           }`}
           style={{
@@ -113,32 +115,32 @@ const FloatingShapes = ({ className = '', count = 5, intensity = 0.02 }: Floatin
             zIndex: shape.zIndex,
             transformStyle: 'preserve-3d',
             perspective: '1000px',
-            boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.03)',
           }}
           initial={{
             background: `linear-gradient(to bottom right, var(--tw-gradient-stops))`,
             opacity: 0,
           }}
           animate={{
-            x: mousePosition.x * shape.depth * 100 * intensity,
-            y: mousePosition.y * shape.depth * 100 * intensity,
-            rotateX: mousePosition.y * 3, // Significantly reduced rotation angle
-            rotateY: -mousePosition.x * 3, // Significantly reduced rotation angle
-            opacity: 0.5, // Reduced opacity
+            x: mousePosition.x * shape.depth * 60 * intensity, // Reduced movement
+            y: mousePosition.y * shape.depth * 60 * intensity, // Reduced movement
+            rotateX: mousePosition.y * 1, // Minimal rotation
+            rotateY: -mousePosition.x * 1, // Minimal rotation
+            opacity: 0.3, // Very subtle opacity
           }}
-          transition={{ type: 'spring', damping: 50, stiffness: 60 }} // Much more damping, even less stiffness
+          transition={{ type: 'spring', damping: 80, stiffness: 40 }} // Even more damping, less stiffness
         >
           <motion.div
-            className={`w-full h-full bg-gradient-to-br ${shape.gradient} opacity-50`} // Further reduced opacity
+            className={`w-full h-full bg-gradient-to-br ${shape.gradient} opacity-30`} // Very low opacity
             animate={{
-              y: [0, 5, 0], // Significantly reduced movement range
-              rotate: [0, shape.id % 2 === 0 ? 2 : -2, 0], // Significantly reduced rotation angle
+              y: [0, 3, 0], // Minimal movement range
+              rotate: [0, shape.id % 2 === 0 ? 1 : -1, 0], // Almost no rotation
             }}
             transition={{
               duration: shape.durationMultiplier,
               repeat: Infinity,
               delay: shape.delayMultiplier,
-              ease: "easeInOut" // Added easing for smoother animation
+              ease: "easeInOut"
             }}
           />
         </motion.div>

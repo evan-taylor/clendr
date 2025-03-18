@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import WaitlistForm from '../components/WaitlistForm';
 import AnimatedBackground from '../components/AnimatedBackground';
+import ClientOnly from '../components/ClientOnly';
+import CursorEffect from '../components/CursorEffect';
 
 export default function Waitlist() {
   return (
@@ -15,32 +17,54 @@ export default function Waitlist() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
+      {/* Custom cursor effect - only client side */}
+      <ClientOnly>
+        <CursorEffect />
+        
+        {/* Style for hiding cursor - client-side only */}
+        <style jsx global>{`
+          html.hide-cursor, 
+          html.hide-cursor * {
+            cursor: none !important;
+          }
+        `}</style>
+      </ClientOnly>
+      
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white overflow-hidden"
+        className="min-h-screen text-zinc-100 bg-zinc-950 overflow-hidden"
       >
         <Header />
         
         <main>
           <section className="relative overflow-hidden pt-32 pb-20">
-            {/* Animated background - using the dots variant with low intensity */}
-            <AnimatedBackground variant="dots" intensity="low" />
+            {/* Static background elements */}
+            <div className="fixed inset-0 z-0 overflow-hidden">
+              <div className="absolute inset-0 bg-zinc-950 bg-gradient-to-b from-zinc-900 to-zinc-950"></div>
+              <div className="absolute inset-0 bg-grid opacity-20"></div>
+              <div className="noise-overlay"></div>
+            </div>
+            
+            {/* Dynamic animated background - client-side only */}
+            <ClientOnly>
+              <AnimatedBackground />
+            </ClientOnly>
             
             <div className="container mx-auto px-4 py-12 relative z-10">
               <div className="max-w-3xl mx-auto text-center mb-12">
                 <motion.h1 
-                  className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight"
+                  className="text-5xl md:text-6xl font-bold text-zinc-100 mb-6 tracking-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
                 >
-                  Join the <span className="gradient-text">Waitlist</span>
+                  Join the <span className="text-gradient">Waitlist</span>
                 </motion.h1>
                 
                 <motion.p 
-                  className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-12 leading-relaxed"
+                  className="text-xl md:text-2xl text-zinc-400 mb-12 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
@@ -52,13 +76,13 @@ export default function Waitlist() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.3 }}
-                  className="bg-white/60 dark:bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-gray-100/20 dark:border-gray-700/20"
+                  className="glass-effect-card"
                 >
                   <WaitlistForm />
                 </motion.div>
                 
                 <motion.div
-                  className="mt-16 text-gray-700 dark:text-gray-300 max-w-2xl mx-auto"
+                  className="mt-16 text-zinc-400 max-w-2xl mx-auto"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
@@ -66,25 +90,25 @@ export default function Waitlist() {
                   <h3 className="text-lg font-medium mb-4">What to expect:</h3>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-primary-500 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-5 h-5 text-zinc-400 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Early access to Clendr</span>
                     </li>
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-primary-500 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-5 h-5 text-zinc-400 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Launch updates and news</span>
                     </li>
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-primary-500 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-5 h-5 text-zinc-400 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Special founding member perks</span>
                     </li>
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-primary-500 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-5 h-5 text-zinc-400 mt-1 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Opportunity to provide feedback</span>
@@ -100,4 +124,4 @@ export default function Waitlist() {
       </motion.div>
     </>
   );
-} 
+}
