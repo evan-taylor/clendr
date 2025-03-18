@@ -91,7 +91,7 @@ export const Hero = ({ title, subtitle, className = '' }: HeroProps) => {
             variants={textVariants}
           >
             <a 
-              href="#waitlist" 
+              href="waitlist" 
               className="btn-primary px-8 py-3 text-base"
               data-cursor-text="Get Early Access"
               data-cursor-variant="hover"

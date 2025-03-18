@@ -251,7 +251,7 @@ const HowItWorks = ({ className = '' }: HowItWorksProps) => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <a href="#waitlist" className="btn-primary px-8 py-3 text-lg interactive" data-cursor-text="Join Now">
+            <a href="waitlist" className="btn-primary px-8 py-3 text-lg interactive" data-cursor-text="Join Now">
               Try Clendr Today
             </a>
           </motion.div>
