@@ -58,7 +58,7 @@ export default function Terms() {
 
               <div className="bg-zinc-800/30 p-6 rounded-xl mb-8 border border-zinc-800">
                 <p className="text-sm text-zinc-400">
-                  Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  Last Updated: March 18, 2025
                 </p>
               </div>
 
@@ -83,23 +83,23 @@ export default function Terms() {
 
                 <motion.h2 variants={fadeIn} className="text-zinc-100">4. Intellectual Property</motion.h2>
                 <motion.p variants={fadeIn} className="text-zinc-300">
-                  The Service and its original content, features, and functionality are and will remain the exclusive property of Clendr Inc. and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Clendr Inc.
+                  The Service and its original content, features, and functionality are and will remain the exclusive property of Clendr and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Clendr.
                 </motion.p>
 
                 <motion.h2 variants={fadeIn} className="text-zinc-100">5. Free Trial</motion.h2>
                 <motion.p variants={fadeIn} className="text-zinc-300">
-                  Clendr Inc. may, at its sole discretion, offer a free trial subscription for a limited period of time. You may be required to enter your billing information to sign up for Free Trial.
+                  Clendr may, at its sole discretion, offer a free trial subscription for a limited period of time. You may be required to enter your billing information to sign up for Free Trial.
                 </motion.p>
                 <motion.p variants={fadeIn} className="text-zinc-300">
-                  If you do enter your billing information when signing up for Free Trial, you will not be charged by Clendr Inc. until Free Trial has expired. On the last day of Free Trial period, unless you cancelled your Subscription, you will be automatically charged the applicable subscription fee for the type of Subscription you have selected.
+                  If you do enter your billing information when signing up for Free Trial, you will not be charged by Clendr until Free Trial has expired. On the last day of Free Trial period, unless you cancelled your Subscription, you will be automatically charged the applicable subscription fee for the type of Subscription you have selected.
                 </motion.p>
                 <motion.p variants={fadeIn} className="text-zinc-300">
-                  At any time and without notice, Clendr Inc. reserves the right to (i) modify Terms of Service of Free Trial offer, or (ii) cancel such Free Trial offer.
+                  At any time and without notice, Clendr reserves the right to (i) modify Terms of Service of Free Trial offer, or (ii) cancel such Free Trial offer.
                 </motion.p>
 
                 <motion.h2 variants={fadeIn} className="text-zinc-100">6. Contact Us</motion.h2>
                 <motion.p variants={fadeIn} className="text-zinc-300">
-                  If you have any questions about these Terms, please contact us at terms@clendr.com.
+                  If you have any questions about these Terms, please contact us at support@clendr.com.
                 </motion.p>
               </div>
             </motion.div>

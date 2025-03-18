@@ -28,7 +28,7 @@ export default function PrivacyPage() {
                 <h1 className="text-4xl md:text-5xl font-bold mb-8 text-zinc-100">Privacy Policy</h1>
                 
                 <div className="prose prose-zinc prose-invert max-w-none">
-                  <p className="text-zinc-400">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p className="text-zinc-400">Last Updated: March 18, 2025</p>
                   
                   <h2 className="text-zinc-100">Introduction</h2>
                   <p className="text-zinc-300">
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
                     If you have any questions about this privacy policy or our data practices, please contact us at:
                   </p>
                   <p className="text-zinc-300">
-                    <strong>Email:</strong> privacy@clendr.com<br />
+                    <strong>Email:</strong> support@clendr.com<br />
                     <strong>Address:</strong> 2261 Market Street #86329, San Francisco, CA 94114
                   </p>
                 </div>
