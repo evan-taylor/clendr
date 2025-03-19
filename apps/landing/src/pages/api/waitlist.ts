@@ -76,8 +76,12 @@ Thanks for joining the Clendr waitlist! I'll keep you updated on our progress an
 In the meantime, have any questions, suggestions, or things you would like to see in Clendr? If so, please reply to this email - it would help me a TON. 🙏
 
 Best,
-Evan
-Founder @ Clendr
+evan taylor
+founder @ clendr
+call/text: (360) 207-1844 | email: evan@clendr.com
+
+ps: want to keep up with the latest updates? follow me on Twitter!
+https://twitter.com/evantaylor1104
 `,
         });
       } catch (resendError) {
