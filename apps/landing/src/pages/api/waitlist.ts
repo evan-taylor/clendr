@@ -8,6 +8,7 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 interface WaitlistRequest {
   email: string;
+  name: string;
 }
 
 interface WaitlistResponse {
@@ -25,7 +26,7 @@ export default async function handler(
   }
 
   try {
-    const { email } = req.body as WaitlistRequest;
+    const { email, name } = req.body as WaitlistRequest;
 
     if (!email || typeof email !== 'string') {
       return res.status(400).json({ success: false, message: 'Email is required' });
@@ -37,6 +38,16 @@ export default async function handler(
       return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
 
+    // Parse name into first and last name
+    let firstName = '';
+    let lastName = '';
+    
+    if (name && typeof name === 'string') {
+      const nameParts = name.trim().split(/\s+/);
+      firstName = nameParts[0] || '';
+      lastName = nameParts.slice(1).join(' ') || '';
+    }
+    
     // Rate limiting check (you would replace this with proper rate limiting)
     // This is a placeholder - in production you would use a dedicated solution
     // such as Redis or database-based rate limiting
@@ -47,39 +58,27 @@ export default async function handler(
         await resend.contacts.create({
           email,
           audience_id: resendAudienceId,
-          // You might want to collect these in a more comprehensive form
-          // first_name: '', 
-          // last_name: '',
+          first_name: firstName,
+          last_name: lastName,
         });
         
-        // Optionally send confirmation email
+        // Optionally send confirmation email - now in plain text
+        const firstNameOrDefault = firstName || 'there';
+        
         await resend.emails.send({
-          from: 'Clendr <evan@clendr.com>',
+          from: 'Evan from Clendr <evan@clendr.com>',
           to: email,
           subject: 'Welcome to the Clendr Waitlist!',
-          html: `
-            <div style="font-family: Inter, system-ui, sans-serif; color: #1f2937; padding: 20px;">
-              <div style="max-width: 600px; margin: 0 auto;">
-                <div style="background: linear-gradient(to right, #0ea5e9, #3b82f6); padding: 4px; border-radius: 8px;">
-                  <div style="background-color: white; border-radius: 6px; padding: 24px;">
-                    <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px;">You're on the list!</h1>
-                    <p style="margin-bottom: 16px; color: #4b5563; line-height: 1.6;">
-                      Thanks for joining the Clendr waitlist! We'll keep you updated on our progress and let you know when Clendr is ready for you to try.
-                    </p>
-                    <p style="margin-bottom: 16px; color: #4b5563; line-height: 1.6;">
-                      In the meantime, have any questions, suggestions, or things you would like to see in Clendr? If so, please reply to this email - it would help us a TON. 🙏
-                    </p>
-                    <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
-                      Best,
-                    </p>
-                    <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
-                      The Clendr Team
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `,
+          text: `Hey ${firstNameOrDefault},
+
+Thanks for joining the Clendr waitlist! I'll keep you updated on our progress and let you know when Clendr is ready for you to try.
+
+In the meantime, have any questions, suggestions, or things you would like to see in Clendr? If so, please reply to this email - it would help me a TON. 🙏
+
+Best,
+Evan
+Founder @ Clendr
+`,
         });
       } catch (resendError) {
         console.error('Resend API error:', resendError);
@@ -100,4 +99,4 @@ export default async function handler(
       message: 'Internal server error' 
     });
   }
-} 
+}
