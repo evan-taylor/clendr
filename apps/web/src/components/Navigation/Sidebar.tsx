@@ -17,6 +17,7 @@ import {
 import { useAuth } from '@/lib/auth';
 import { getUserCalendars, updateUserCalendar, UserCalendar } from '@/lib/googleCalendar';
 import GoogleCalendarConnect from '../Calendar/GoogleCalendarConnect';
+import OfflineIndicator from './OfflineIndicator';
 
 interface SidebarProps {
   className?: string;
@@ -106,22 +107,22 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
   return (
     <>
       <div 
-        className={`h-screen bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col transition-all duration-300 ease-in-out ${
+        className={`h-screen bg-gray-50 dark:bg-neutral-900/90 border-r border-gray-200 dark:border-neutral-900 flex flex-col transition-all duration-300 ease-in-out ${
           collapsed ? 'w-14' : 'w-60'
         } ${className}`}
       >
         {!collapsed && (
-          <div className="px-3 py-4 border-b border-gray-100 dark:border-gray-800">
+          <div className="px-3 py-4 border-b border-gray-100 dark:border-neutral-900">
             <div className="flex items-center space-x-2">
-              <Calendar className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-              <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">Clendr</h2>
+              <Calendar className="h-5 w-5 text-gray-500 dark:text-neutral-400" />
+              <h2 className="text-sm font-medium text-gray-700 dark:text-neutral-300">Clendr</h2>
             </div>
           </div>
         )}
 
         {collapsed && (
-          <div className="p-4 flex justify-center border-b border-gray-100 dark:border-gray-800">
-            <Calendar className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          <div className="p-4 flex justify-center border-b border-gray-100 dark:border-neutral-900">
+            <Calendar className="h-5 w-5 text-gray-500 dark:text-neutral-400" />
           </div>
         )}
 
@@ -130,8 +131,8 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
             collapsed ? 'justify-center' : ''
           } ${
             pathname === '/calendar' 
-              ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' 
-              : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
+              ? 'bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-neutral-100' 
+              : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-900 dark:hover:text-neutral-100'
           }`}>
             <Calendar size={16} className={collapsed ? '' : 'mr-2'} />
             {!collapsed && <span className="text-sm">Calendar</span>}
@@ -140,7 +141,7 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
           {!collapsed && (
             <div className="mt-4">
               <div 
-                className="flex items-center justify-between px-2 py-1.5 cursor-pointer text-gray-700 dark:text-gray-400"
+                className="flex items-center justify-between px-2 py-1.5 cursor-pointer text-gray-700 dark:text-neutral-400"
                 onClick={() => setCalendarMenuOpen(!calendarMenuOpen)}
               >
                 <span className="text-xs font-medium uppercase tracking-wider">Calendars</span>
@@ -150,32 +151,32 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
               {calendarMenuOpen && (
                 <div className="ml-2 mt-1 space-y-0.5">
                   {!user ? (
-                    <p className="text-xs text-gray-500 dark:text-gray-500 px-2 py-1.5">
+                    <p className="text-xs text-gray-500 dark:text-neutral-500 px-2 py-1.5">
                       Sign in to connect calendars
                     </p>
                   ) : calendars.length === 0 ? (
-                    <p className="text-xs text-gray-500 dark:text-gray-500 px-2 py-1.5">
+                    <p className="text-xs text-gray-500 dark:text-neutral-500 px-2 py-1.5">
                       No calendars connected yet.
                     </p>
                   ) : (
                     calendars.map(calendar => (
-                      <div key={calendar.id} className="flex items-center px-2 py-1.5 text-xs rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 group">
+                      <div key={calendar.id} className="flex items-center px-2 py-1.5 text-xs rounded-md hover:bg-gray-100 dark:hover:bg-neutral-800 group">
                         <div 
                           className="flex-shrink-0 w-2.5 h-2.5 rounded-full mr-2 cursor-pointer"
                           style={{ backgroundColor: calendar.color }}
                           onClick={() => setIsColorPickerOpen(isColorPickerOpen === calendar.id ? null : calendar.id)}
                         />
-                        <span className="flex-1 truncate text-gray-700 dark:text-gray-300">{calendar.name}</span>
+                        <span className="flex-1 truncate text-gray-700 dark:text-neutral-300">{calendar.name}</span>
                         <button 
                           onClick={() => toggleCalendarVisibility(calendar.id, calendar.is_visible)}
-                          className="ml-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="ml-1 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           {calendar.is_visible ? <Eye size={14} /> : <EyeOff size={14} />}
                         </button>
 
                         {/* Color picker popup */}
                         {isColorPickerOpen === calendar.id && (
-                          <div className="absolute z-10 mt-2 ml-6 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 grid grid-cols-5 gap-1">
+                          <div className="absolute z-10 mt-2 ml-6 p-2 bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-gray-200 dark:border-neutral-800 grid grid-cols-5 gap-1">
                             {colorOptions.map(color => (
                               <div 
                                 key={color} 
@@ -186,7 +187,7 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
                             ))}
                             <button 
                               onClick={() => setIsColorPickerOpen(null)}
-                              className="absolute -top-1 -right-1 bg-white dark:bg-gray-800 rounded-full p-0.5 border border-gray-200 dark:border-gray-700"
+                              className="absolute -top-1 -right-1 bg-white dark:bg-neutral-900 rounded-full p-0.5 border border-gray-200 dark:border-neutral-800"
                             >
                               <X size={10} />
                             </button>
@@ -198,10 +199,10 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
                   
                   <button 
                     onClick={() => setIsConnectModalOpen(true)}
-                    className="flex items-center w-full px-2 py-1.5 text-xs rounded-md text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="flex items-center w-full px-2 py-1.5 text-xs rounded-md text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-neutral-800"
                   >
-                    <Plus size={14} className="mr-1.5" />
-                    <span>Connect Calendar</span>
+                    <Plus size={14} className="mr-1" />
+                    Connect Calendar
                   </button>
                 </div>
               )}
@@ -211,7 +212,7 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
           {collapsed && (
             <div className="pt-3 pb-2 flex flex-col items-center space-y-3">
               <button 
-                className="flex items-center justify-center p-1.5 cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                className="flex items-center justify-center p-1.5 cursor-pointer text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md"
                 onClick={() => setIsConnectModalOpen(true)}
                 title="Connect Calendar"
               >
@@ -236,7 +237,7 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
                     </div>
                   ))}
                   {calendars.length > 3 && (
-                    <div className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
+                    <div className="w-5 h-5 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center text-xs text-gray-500 dark:text-neutral-400">
                       +{calendars.length - 3}
                     </div>
                   )}
@@ -246,13 +247,14 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
           )}
         </nav>
 
-        <div className={`p-2 border-t border-gray-100 dark:border-gray-800 ${collapsed ? 'flex justify-center' : ''}`}>
+        <div className={`p-2 border-t border-gray-100 dark:border-neutral-900 ${collapsed ? 'flex flex-col items-center gap-2' : ''}`}>
+          <OfflineIndicator collapsed={collapsed} />
           <Link href="/settings" className={`flex items-center rounded-md ${
             collapsed ? 'justify-center p-1.5' : 'px-2 py-1.5'
           } ${
             pathname === '/settings' 
-              ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' 
-              : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
+              ? 'bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-neutral-100' 
+              : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-900 dark:hover:text-neutral-100'
           }`}>
             <Settings size={16} className={collapsed ? '' : 'mr-2'} />
             {!collapsed && <span className="text-sm">Settings</span>}

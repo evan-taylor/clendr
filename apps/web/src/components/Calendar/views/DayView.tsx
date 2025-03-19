@@ -122,7 +122,7 @@ export default function DayView() {
       
       const rect = timeGridRef.current.getBoundingClientRect();
       const y = e.clientY - rect.top;
-      const time = calculateTimeFromPosition(y, timeGridHeight, currentDate);
+      const time = calculateTimeFromPosition(y, timeGridHeight, 0, 24, currentDate);
       
       setDragStart({ y, time });
       setDragEnd({ y, time });
@@ -138,7 +138,7 @@ export default function DayView() {
     
     const rect = timeGridRef.current.getBoundingClientRect();
     const y = Math.max(0, Math.min(e.clientY - rect.top, timeGridHeight));
-    const time = calculateTimeFromPosition(y, timeGridHeight, dragStart.time);
+    const time = calculateTimeFromPosition(y, timeGridHeight, 0, 24, dragStart.time);
     
     setDragEnd({ y, time });
   };
@@ -321,7 +321,7 @@ export default function DayView() {
         <div className="fixed inset-0 bg-black bg-opacity-30 dark:bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <EventForm
             initialData={selectedEvent || undefined}
-            selectedTimeSlot={selectedTimeSlot || undefined}
+            selectedDate={selectedTimeSlot ? selectedTimeSlot.start : undefined}
             onClose={() => setShowEventForm(false)}
           />
         </div>

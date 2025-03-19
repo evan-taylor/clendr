@@ -22,25 +22,31 @@ type EventFormProps = {
   initialData?: EventFormData;
   onClose: () => void;
   selectedDate?: Date;
+  selectedTimeSlot?: {
+    start: Date;
+    end: Date;
+  };
 };
 
-export default function EventForm({ initialData, onClose, selectedDate }: EventFormProps) {
+export default function EventForm({ initialData, onClose, selectedDate, selectedTimeSlot }: EventFormProps) {
   const { addEvent, updateEvent } = useCalendar();
   const [isAllDay, setIsAllDay] = useState(initialData?.is_all_day || false);
   
-  const defaultStartTime = selectedDate || new Date();
-  const defaultEndTime = new Date(defaultStartTime);
-  defaultEndTime.setHours(defaultStartTime.getHours() + 1);
-  
   const getInitialData = (): EventFormData => {
     if (initialData) return initialData;
+    
+    const startTime = selectedTimeSlot?.start || selectedDate || new Date();
+    const endTime = selectedTimeSlot?.end || new Date(startTime);
+    if (!selectedTimeSlot) {
+      endTime.setHours(startTime.getHours() + 1);
+    }
     
     return {
       title: '',
       description: '',
       location: '',
-      start_time: defaultStartTime.toISOString(),
-      end_time: defaultEndTime.toISOString(),
+      start_time: startTime.toISOString(),
+      end_time: endTime.toISOString(),
       is_all_day: false,
       color: EVENT_COLORS.blue.bg,
     };
@@ -48,8 +54,8 @@ export default function EventForm({ initialData, onClose, selectedDate }: EventF
   
   const [formData, setFormData] = useState<EventFormData>(getInitialData());
   
-  const formatDateForInput = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDateForInput = (dateValue: string | Date) => {
+    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
     return format(date, "yyyy-MM-dd'T'HH:mm");
   };
   

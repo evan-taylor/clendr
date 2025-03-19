@@ -119,7 +119,7 @@ export default function WeekView() {
       
       const rect = timeGridRef.current.getBoundingClientRect();
       const y = e.clientY - rect.top;
-      const time = calculateTimeFromPosition(y, timeGridHeight, day);
+      const time = calculateTimeFromPosition(y, timeGridHeight, 0, 24, day);
       
       setDragStart({ y, time });
       setDragEnd({ y, time });
@@ -135,7 +135,7 @@ export default function WeekView() {
     
     const rect = timeGridRef.current.getBoundingClientRect();
     const y = Math.max(0, Math.min(e.clientY - rect.top, timeGridHeight));
-    const time = calculateTimeFromPosition(y, timeGridHeight, dragStart.time);
+    const time = calculateTimeFromPosition(y, timeGridHeight, 0, 24, dragStart.time);
     
     setDragEnd({ y, time });
   };

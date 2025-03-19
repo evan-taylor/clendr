@@ -1,20 +1,26 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export const createServerSupabaseClient = () => {
   const cookieStore = cookies();
   
-  return createServerComponentClient({
-    cookies: () => cookieStore,
-    options: {
-      cookieOptions: {
-        name: 'sb-auth',
-        lifetime: 60 * 60 * 24 * 7, // 1 week
-        sameSite: 'lax',
-        path: '/',
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: any) {
+          cookieStore.set(name, value, options);
+        },
+        remove(name: string, options: any) {
+          cookieStore.set(name, '', options);
+        },
       },
-    },
-  });
+    }
+  );
 };
 
 // Helper function to get the authenticated user server-side

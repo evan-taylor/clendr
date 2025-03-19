@@ -97,14 +97,14 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
   return (
     <div className={`flex flex-col h-full ${className}`}>
       {/* Week header */}
-      <div className="flex border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-        <div className="w-16 flex-shrink-0 border-r border-gray-200 dark:border-gray-800"></div>
+      <div className="flex border-b border-gray-200 dark:border-neutral-900 bg-gray-50 dark:bg-neutral-950">
+        <div className="w-16 flex-shrink-0 border-r border-gray-200 dark:border-neutral-900"></div>
         {days.map((day) => (
           <div 
             key={day.date.toISOString()} 
             className={`flex-1 p-2 text-center ${
-              day.isToday ? 'bg-blue-50 dark:bg-blue-900/20' : 
-              !day.isSameMonth ? 'bg-gray-100 dark:bg-gray-800' : ''
+              day.isToday ? 'bg-blue-50 dark:bg-neutral-900/80' : 
+              !day.isSameMonth ? 'bg-gray-100 dark:bg-neutral-900' : ''
             }`}
           >
             <div className="text-sm">{format(day.date, 'EEE')}</div>
@@ -118,8 +118,8 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
       </div>
 
       {/* All-day events */}
-      <div className="flex border-b border-gray-200 dark:border-gray-800">
-        <div className="w-16 flex-shrink-0 border-r border-gray-200 dark:border-gray-800 p-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+      <div className="flex border-b border-gray-200 dark:border-neutral-900">
+        <div className="w-16 flex-shrink-0 border-r border-gray-200 dark:border-neutral-900 p-1 text-xs text-gray-500 dark:text-neutral-400 flex items-center">
           ALL DAY
         </div>
         {days.map((day) => {
@@ -128,8 +128,8 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
             <div 
               key={`allday-${day.date.toISOString()}`}
               className={`flex-1 p-1 min-h-10 ${
-                day.isToday ? 'bg-blue-50 dark:bg-blue-900/20' : 
-                !day.isSameMonth ? 'bg-gray-100 dark:bg-gray-800' : ''
+                day.isToday ? 'bg-blue-50 dark:bg-neutral-900/80' : 
+                !day.isSameMonth ? 'bg-gray-100 dark:bg-neutral-900' : ''
               }`}
             >
               {allDayEvents.map((event) => (
@@ -153,14 +153,17 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
       <div className="flex-1 overflow-y-auto">
         <div className="flex" style={{ height: `${HOUR_HEIGHT * 24}px` }}>
           {/* Time labels */}
-          <div className="w-16 flex-shrink-0 relative border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+          <div className="w-16 flex-shrink-0 relative border-r border-gray-200 dark:border-neutral-900 bg-white dark:bg-neutral-950">
             {hours.map((hour) => (
               <div 
                 key={hour.getTime()} 
-                className="absolute w-full border-t border-gray-200 dark:border-gray-800 flex items-start justify-center -mt-3 text-xs text-gray-500 dark:text-gray-400"
-                style={{ top: `${hour.getHours() * HOUR_HEIGHT}px` }}
+                className="absolute w-full border-t border-gray-200 dark:border-neutral-900 flex items-start justify-center text-xs text-gray-500 dark:text-neutral-400"
+                style={{ 
+                  top: `${hour.getHours() * HOUR_HEIGHT}px`, 
+                  paddingTop: hour.getHours() === 0 ? '3px' : '0' // Ensure 12 AM is visible
+                }}
               >
-                <span>{format(hour, 'h a')}</span>
+                <span className="mt-1">{format(hour, 'h a')}</span>
               </div>
             ))}
           </div>
@@ -171,15 +174,15 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
             return (
               <div 
                 key={`grid-${day.date.toISOString()}`} 
-                className={`flex-1 relative border-r border-gray-200 dark:border-gray-800 ${
-                  day.isToday ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''
+                className={`flex-1 relative border-r border-gray-200 dark:border-neutral-900 ${
+                  day.isToday ? 'bg-blue-50/30 dark:bg-neutral-900/60' : ''
                 }`}
               >
                 {/* Hour grid lines */}
                 {hours.map((hour) => (
                   <div 
                     key={hour.getTime()} 
-                    className="absolute w-full border-t border-gray-200 dark:border-gray-800" 
+                    className="absolute w-full border-t border-gray-200 dark:border-neutral-900" 
                     style={{ top: `${hour.getHours() * HOUR_HEIGHT}px` }}
                   />
                 ))}
@@ -203,7 +206,7 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
                       </div>
                       {height > 30 && (
                         <div className="text-xs truncate">
-                          {format(new Date(event.start_time), 'h:mm a')}
+                          {format(new Date(event.start_time), 'h:mm a')} - {format(new Date(event.end_time), 'h:mm a')}
                         </div>
                       )}
                     </div>
@@ -213,12 +216,13 @@ const WeekView: React.FC<Props> = ({ className = '' }) => {
                 {/* Current time indicator (only for today) */}
                 {day.isToday && (
                   <div 
-                    className="absolute left-0 right-0 border-t border-red-500 z-20"
+                    className="absolute left-0 right-0 border-t-2 border-red-500 z-20"
                     style={{ 
-                      top: `${(new Date().getHours() * 60 + new Date().getMinutes()) * MIN_HEIGHT}px` 
+                      top: `${(new Date().getHours() * 60 + new Date().getMinutes()) * MIN_HEIGHT}px`,
+                      marginTop: '-1px' // Adjust to align with grid lines
                     }}
                   >
-                    <div className="absolute -top-2 -left-1 w-3 h-3 rounded-full bg-red-500" />
+                    <div className="absolute -top-1.5 -left-1 w-3 h-3 rounded-full bg-red-500" />
                   </div>
                 )}
               </div>

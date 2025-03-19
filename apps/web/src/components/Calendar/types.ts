@@ -26,11 +26,25 @@ export interface CalendarEvent {
   start?: {
     dateTime?: string;
     date?: string;
+    timeZone?: string;
   };
   end?: {
     dateTime?: string;
     date?: string;
+    timeZone?: string;
   };
+  colorId?: string; // Google Calendar color ID
+  created?: string;
+  updated?: string;
+  creator?: {
+    email?: string;
+    displayName?: string;
+  };
+  organizer?: {
+    email?: string;
+    displayName?: string;
+  };
+  status?: string; // confirmed, tentative, cancelled
 }
 
 export interface CalendarContextType {

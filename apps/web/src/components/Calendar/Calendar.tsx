@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { 
   addMonths, 
   subMonths, 
@@ -11,116 +11,145 @@ import {
   format,
   startOfMonth,
   endOfMonth,
+  startOfWeek,
+  endOfWeek,
   isSameMonth,
   isSameDay,
+  addMonths as dateAddMonths,
+  setMonth,
+  setDate
 } from 'date-fns';
 import { CalendarProvider, useCalendar } from './CalendarContext';
 import MonthView from './MonthView';
 import WeekView from './WeekView';
 import DayView from './DayView';
-import { ViewType } from './types';
+import { ViewType, CalendarEvent } from './types';
 import { cn } from '../../utils/cn';
 import { useTheme } from 'next-themes';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Plus, ChevronsLeft, ChevronsRight, Moon, Sun } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Calendar as CalendarIcon, 
+  Plus, 
+  ChevronsLeft, 
+  ChevronsRight, 
+  Moon, 
+  Sun,
+  MoreVertical,
+  LogOut,
+  Settings,
+  HelpCircle
+} from 'lucide-react';
 import Sidebar from '../Navigation/Sidebar';
 import { useAuth } from '@/lib/auth';
-import { getUserCalendars, fetchCalendarEvents, CalendarEvent } from '@/lib/googleCalendar';
-
+import { 
+  fetchAllVisibleEvents,
+  fetchEventsFromMultipleCalendars,
+  getUserCalendars
+} from '@/lib/googleCalendar';
+import GoogleCalendarConnect from './GoogleCalendarConnect';
+import CalendarSkeleton from './CalendarSkeleton';
 type CalendarProps = {
-  initialEvents?: any[];
+  initialEvents?: CalendarEvent[];
   initialView?: ViewType;
   initialDate?: Date;
-  onEventChange?: (events: any[]) => void;
+  onEventChange?: (events: CalendarEvent[]) => void;
 };
 
-function AppHeader({ sidebarCollapsed, toggleSidebar }: { sidebarCollapsed: boolean; toggleSidebar: () => void }) {
+function AppHeader({ 
+  sidebarCollapsed, 
+  toggleSidebar, 
+  onConnectCalendar,
+  onSignOut
+}: { 
+  sidebarCollapsed: boolean; 
+  toggleSidebar: () => void;
+  onConnectCalendar?: () => void;
+  onSignOut: () => void;
+}) {
   const { view, setView, currentDate, setCurrentDate } = useCalendar();
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   
-  // After mounting, we can access the theme
+  // Handle clicks outside of the user menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  // Track if component is mounted for theme
   useEffect(() => {
     setMounted(true);
   }, []);
-  
-  const navigatePrevious = () => {
-    switch (view) {
-      case 'month':
-        setCurrentDate(subMonths(currentDate, 1));
-        break;
-      case 'week':
-        setCurrentDate(subWeeks(currentDate, 1));
-        break;
-      case 'day':
-        setCurrentDate(subDays(currentDate, 1));
-        break;
-    }
-  };
-  
-  const navigateNext = () => {
-    switch (view) {
-      case 'month':
-        setCurrentDate(addMonths(currentDate, 1));
-        break;
-      case 'week':
-        setCurrentDate(addWeeks(currentDate, 1));
-        break;
-      case 'day':
-        setCurrentDate(addDays(currentDate, 1));
-        break;
-    }
-  };
-  
-  const goToToday = () => {
-    setCurrentDate(new Date());
-  };
   
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
   
+  // Navigation functions
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+  
+  const goBack = () => {
+    if (view === 'month') {
+      setCurrentDate(subMonths(currentDate, 1));
+    } else if (view === 'week') {
+      setCurrentDate(subWeeks(currentDate, 1));
+    } else {
+      setCurrentDate(subDays(currentDate, 1));
+    }
+  };
+  
+  const goForward = () => {
+    if (view === 'month') {
+      setCurrentDate(addMonths(currentDate, 1));
+    } else if (view === 'week') {
+      setCurrentDate(addWeeks(currentDate, 1));
+    } else {
+      setCurrentDate(addDays(currentDate, 1));
+    }
+  };
+
   return (
-    <div className="flex justify-between items-center px-4 py-3 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
-      <div className="flex items-center gap-4">
-        <button
-          onClick={toggleSidebar}
-          className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none"
-          aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {sidebarCollapsed ? 
-            <ChevronsRight size={18} className="text-gray-500 dark:text-gray-400" /> : 
-            <ChevronsLeft size={18} className="text-gray-500 dark:text-gray-400" />
-          }
-        </button>
-        
-        <div className="flex gap-2">
+    <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-gray-200 dark:border-neutral-900 bg-white dark:bg-neutral-950">
+      <div className="flex items-center">
+        <div className="flex items-center space-x-3">
           <button
-            className="px-3 py-1.5 rounded-md text-sm font-medium border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             onClick={goToToday}
+            className="px-3 py-1.5 rounded-md text-sm font-medium border border-gray-200 dark:border-neutral-900 bg-white dark:bg-neutral-900 text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
           >
             Today
           </button>
           
-          <div className="flex">
+          <div className="flex items-center space-x-1">
             <button
-              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-800"
-              onClick={navigatePrevious}
+              onClick={goBack}
+              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-900 transition-colors"
               aria-label="Previous"
             >
-              <ChevronLeft className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <ChevronLeft className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
             </button>
-            
             <button
-              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-800 ml-px"
-              onClick={navigateNext}
+              onClick={goForward}
+              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-900 transition-colors"
               aria-label="Next"
             >
-              <ChevronRight className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <ChevronRight className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
             </button>
           </div>
           
-          <h2 className="ml-2 text-base font-medium text-gray-700 dark:text-gray-300">
+          <h2 className="ml-2 text-base font-medium text-gray-700 dark:text-neutral-300">
             {view === 'month' && format(currentDate, 'MMMM yyyy')}
             {view === 'week' && `${format(currentDate, 'MMM d')} - ${format(addDays(currentDate, 6), 'MMM d, yyyy')}`}
             {view === 'day' && format(currentDate, 'EEEE, MMMM d, yyyy')}
@@ -129,14 +158,24 @@ function AppHeader({ sidebarCollapsed, toggleSidebar }: { sidebarCollapsed: bool
       </div>
       
       <div className="flex items-center gap-3">
-        <div className="flex items-center bg-gray-50 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800 p-0.5">
+        {onConnectCalendar && (
+          <button
+            onClick={onConnectCalendar}
+            className="flex items-center px-3 py-1.5 rounded-md text-sm font-medium border border-gray-200 dark:border-neutral-900 bg-white dark:bg-neutral-900 text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <CalendarIcon size={16} className="mr-1.5" />
+            Connect Calendar
+          </button>
+        )}
+        
+        <div className="flex items-center bg-gray-50 dark:bg-neutral-900 rounded-md border border-gray-200 dark:border-neutral-900 p-0.5">
           <button
             onClick={() => setView('day')}
             className={cn(
               "px-3 py-1 rounded text-xs font-medium transition-colors",
               view === 'day' 
-                ? "bg-white dark:bg-gray-800 shadow-sm text-gray-800 dark:text-white" 
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+                ? "bg-white dark:bg-neutral-800 shadow-sm text-gray-800 dark:text-neutral-100" 
+                : "text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-100"
             )}
           >
             Day
@@ -146,8 +185,8 @@ function AppHeader({ sidebarCollapsed, toggleSidebar }: { sidebarCollapsed: bool
             className={cn(
               "px-3 py-1 rounded text-xs font-medium transition-colors",
               view === 'week' 
-                ? "bg-white dark:bg-gray-800 shadow-sm text-gray-800 dark:text-white" 
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+                ? "bg-white dark:bg-neutral-800 shadow-sm text-gray-800 dark:text-neutral-100" 
+                : "text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-100"
             )}
           >
             Week
@@ -157,8 +196,8 @@ function AppHeader({ sidebarCollapsed, toggleSidebar }: { sidebarCollapsed: bool
             className={cn(
               "px-3 py-1 rounded text-xs font-medium transition-colors",
               view === 'month' 
-                ? "bg-white dark:bg-gray-800 shadow-sm text-gray-800 dark:text-white" 
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+                ? "bg-white dark:bg-neutral-800 shadow-sm text-gray-800 dark:text-neutral-100" 
+                : "text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-100"
             )}
           >
             Month
@@ -167,34 +206,40 @@ function AppHeader({ sidebarCollapsed, toggleSidebar }: { sidebarCollapsed: bool
 
         <button
           onClick={toggleTheme}
-          className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-800"
+          className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-900 transition-colors border border-gray-200 dark:border-neutral-900"
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
           {mounted && theme === 'light' ? (
-            <Moon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <Moon className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
           ) : (
-            <Sun className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <Sun className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
           )}
         </button>
 
-        <div className="relative">
+        <div className="relative" ref={userMenuRef}>
           <button 
-            className="h-8 w-8 rounded-full bg-gray-800 dark:bg-gray-700 text-white flex items-center justify-center hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+            className="h-8 w-8 rounded-full bg-gray-800 dark:bg-neutral-700 text-white flex items-center justify-center hover:bg-gray-700 dark:hover:bg-neutral-600 transition-colors"
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
           >
             <span className="text-xs font-medium">ET</span>
           </button>
           
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-gray-800">
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-neutral-900 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-neutral-800">
+              <button className="flex w-full items-center text-left px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800">
+                <Settings className="h-4 w-4 mr-2" />
                 Settings
               </button>
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+              <button className="flex w-full items-center text-left px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800">
+                <HelpCircle className="h-4 w-4 mr-2" />
                 Help & Feedback
               </button>
-              <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+              <div className="border-t border-gray-100 dark:border-neutral-800 my-1"></div>
+              <button 
+                onClick={onSignOut}
+                className="flex w-full items-center text-left px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
                 Sign out
               </button>
             </div>
@@ -218,19 +263,40 @@ function CalendarContent() {
 }
 
 function CreateButton() {
-  const [showEventForm, setShowEventForm] = useState(false);
-  const { events } = useCalendar();
-  
+  const { view, currentDate, addEvent } = useCalendar();
+
+  const handleAddEvent = () => {
+    // Determine default start and end times based on the current view and date
+    const now = new Date();
+    let startTime = new Date(currentDate);
+    startTime.setHours(now.getHours());
+    startTime.setMinutes(0);
+    startTime.setSeconds(0);
+    
+    let endTime = new Date(startTime);
+    endTime.setHours(endTime.getHours() + 1);
+    
+    // Create a default event
+    const eventId = addEvent({
+      title: '',
+      description: '',
+      start_time: startTime,
+      end_time: endTime,
+      is_all_day: false,
+    });
+    
+    // TODO: Open event editor with this new event
+    console.log('Created new event with ID', eventId);
+  };
+
   return (
-    <>
-      <button
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white shadow-lg rounded-full p-3 flex items-center justify-center transition-colors"
-        aria-label="Create event"
-        onClick={() => setShowEventForm(true)}
-      >
-        <Plus className="h-5 w-5" />
-      </button>
-    </>
+    <button
+      onClick={handleAddEvent}
+      className="fixed right-6 bottom-6 h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white shadow-lg transition-colors z-10"
+      aria-label="Create new event"
+    >
+      <Plus className="h-6 w-6" />
+    </button>
   );
 }
 
@@ -241,113 +307,146 @@ export default function Calendar({
   onEventChange
 }: CalendarProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const { user, session } = useAuth();
-  const [calendars, setCalendars] = useState<any[]>([]);
-  const [events, setEvents] = useState<any[]>([]);
-  const [isLoadingEvents, setIsLoadingEvents] = useState(false);
+  const [showConnectDialog, setShowConnectDialog] = useState(false);
+  const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
+  const [isLoading, setIsLoading] = useState(true);
+  const [effectiveView, setEffectiveView] = useState<ViewType>(initialView);
+  const { user, session, signOut, refreshSession } = useAuth();
   
+  // Track the displayed date range
+  const [dateRange, setDateRange] = useState({
+    start: startOfMonth(initialDate),
+    end: endOfMonth(initialDate)
+  });
+  
+  // Toggle sidebar collapsed state
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
   
-  // Load user calendars on mount
-  useEffect(() => {
-    async function loadUserCalendars() {
-      try {
-        if (!user?.id) return;
-        console.log('Loading user calendars for user:', user.id);
-        const userCalendars = await getUserCalendars(user.id);
-        console.log('Retrieved user calendars:', userCalendars);
-        setCalendars(userCalendars);
-      } catch (error) {
-        console.error('Error loading calendars:', error);
-      }
+  // Handle date changes and load events for the new date range
+  const handleDateChange = useCallback((newDate: Date) => {
+    // Determine date range based on current view
+    let start: Date, end: Date;
+    
+    if (effectiveView === 'month') {
+      start = startOfMonth(newDate);
+      end = endOfMonth(newDate);
+    } else if (effectiveView === 'week') {
+      start = startOfWeek(newDate);
+      end = endOfWeek(newDate);
+    } else {
+      // Day view
+      start = new Date(newDate);
+      start.setHours(0, 0, 0, 0);
+      
+      end = new Date(newDate);
+      end.setHours(23, 59, 59, 999);
     }
     
-    if (user?.id) {
-      loadUserCalendars();
-    }
-  }, [user?.id]);
+    setDateRange({ start, end });
+  }, [effectiveView]);
   
-  // Load calendar events when date changes
+  // Fetch events when date range changes
   useEffect(() => {
-    async function loadCalendarEvents() {
-      if (!session?.provider_token || calendars.length === 0) {
-        console.log('Cannot load events - no provider token or calendars', {
-          hasToken: !!session?.provider_token,
-          calendarsCount: calendars.length
-        });
-        return;
-      }
-      
-      setIsLoadingEvents(true);
-      const start = startOfMonth(initialDate);
-      const end = endOfMonth(initialDate);
-      console.log('Fetching events from', start, 'to', end);
-      
+    if (!user?.id) return;
+    
+    const fetchEvents = async () => {
       try {
-        const allEvents: CalendarEvent[] = [];
+        setIsLoading(true);
         
-        // Only fetch events for visible calendars
-        const visibleCalendars = calendars.filter(cal => cal.is_visible);
-        console.log('Visible calendars:', visibleCalendars);
-        
-        await Promise.all(
-          visibleCalendars.map(async (calendar) => {
-            try {
-              console.log('Fetching events for calendar:', calendar.name, calendar.calendar_id);
-              const calendarEvents = await fetchCalendarEvents(
-                calendar.calendar_id,
-                session.provider_token!,
-                start,
-                end
-              );
-              console.log(`Retrieved ${calendarEvents.length} events for calendar ${calendar.name}`);
-              
-              // Add calendar info to each event
-              const eventsWithCalendar = calendarEvents.map(event => ({
-                ...event,
-                calendar: {
-                  id: calendar.id,
-                  name: calendar.name,
-                  color: calendar.color
-                }
-              }));
-              
-              allEvents.push(...eventsWithCalendar);
-            } catch (err) {
-              console.error(`Error fetching events for calendar ${calendar.name}:`, err);
-            }
-          })
+        // Get user's calendars and fetch all visible ones
+        const events = await fetchAllVisibleEvents(
+          user.id,
+          dateRange.start,
+          dateRange.end
         );
         
-        console.log(`Total events loaded: ${allEvents.length}`);
-        setEvents(allEvents);
-        if (onEventChange) {
-          onEventChange(allEvents);
-        }
+        setEvents(events);
       } catch (error) {
-        console.error('Error loading events:', error);
+        console.error('Error fetching events:', error);
       } finally {
-        setIsLoadingEvents(false);
+        setIsLoading(false);
+      }
+    };
+    
+    fetchEvents();
+  }, [user?.id, dateRange, session?.provider_token]);
+  
+  // Update event handler to keep parent component in sync
+  useEffect(() => {
+    if (onEventChange) {
+      onEventChange(events);
+    }
+  }, [events, onEventChange]);
+  
+  // Handle successful calendar connection
+  const handleConnectSuccess = useCallback(async () => {
+    // Refresh session to get updated tokens
+    await refreshSession();
+    
+    // Refetch events with new calendar
+    if (user?.id) {
+      setIsLoading(true);
+      
+      try {
+        const events = await fetchAllVisibleEvents(
+          user.id,
+          dateRange.start,
+          dateRange.end
+        );
+        
+        setEvents(events);
+      } catch (error) {
+        console.error('Error fetching events after connect:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    
-    if (calendars.length > 0 && session?.provider_token) {
-      loadCalendarEvents();
+  }, [user?.id, dateRange, refreshSession]);
+  
+  // Handle sign out
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
-  }, [calendars, initialDate, session?.provider_token, onEventChange]);
+  }, [signOut]);
   
   return (
-    <CalendarProvider initialEvents={events} initialView={initialView} initialDate={initialDate}>
-      <div className="h-screen w-full flex bg-white dark:bg-gray-950">
+    <CalendarProvider 
+      initialEvents={events} 
+      initialView={effectiveView}
+      initialDate={initialDate}
+      onDateChange={handleDateChange}
+    >
+      <div className="h-screen w-full flex bg-white dark:bg-neutral-950">
         <Sidebar collapsed={sidebarCollapsed} />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <AppHeader sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-          <CalendarContent />
+          <AppHeader 
+            sidebarCollapsed={sidebarCollapsed} 
+            toggleSidebar={toggleSidebar}
+            onConnectCalendar={() => setShowConnectDialog(true)}
+            onSignOut={handleSignOut}
+          />
+          
+          {isLoading ? (
+            <CalendarSkeleton view={effectiveView} />
+          ) : (
+            <CalendarContent />
+          )}
+          
           <CreateButton />
         </div>
+        
+        {/* Google Calendar Connect Dialog */}
+        <GoogleCalendarConnect 
+          isOpen={showConnectDialog}
+          onClose={() => setShowConnectDialog(false)}
+          onSuccess={handleConnectSuccess}
+        />
       </div>
     </CalendarProvider>
   );
-} 
+}

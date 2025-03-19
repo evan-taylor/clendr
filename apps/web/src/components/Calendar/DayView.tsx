@@ -86,13 +86,13 @@ const DayView: React.FC<Props> = ({ className = '' }) => {
 
   return (
     <div className={`flex flex-col h-full ${className}`}>
-      <div className="py-2 px-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-        <h3 className="text-lg font-medium">{format(currentDate, 'EEEE, MMMM d, yyyy')}</h3>
+      <div className="py-2 px-4 border-b border-gray-200 dark:border-neutral-900 bg-gray-50 dark:bg-neutral-950">
+        <h3 className="text-lg font-medium text-gray-800 dark:text-neutral-200">{format(currentDate, 'EEEE, MMMM d, yyyy')}</h3>
       </div>
       
       {allDayEvents.length > 0 && (
-        <div className="border-b border-gray-200 dark:border-gray-800 py-2 px-3">
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">ALL DAY</div>
+        <div className="border-b border-gray-200 dark:border-neutral-900 py-2 px-3">
+          <div className="text-xs text-gray-500 dark:text-neutral-400 mb-1">ALL DAY</div>
           <div className="space-y-1">
             {allDayEvents.map((event) => (
               <div
@@ -116,24 +116,27 @@ const DayView: React.FC<Props> = ({ className = '' }) => {
           style={{ height: `${HOUR_HEIGHT * 24}px` }}
         >
           {/* Time labels */}
-          <div className="absolute left-0 top-0 w-16 h-full border-r border-gray-200 dark:border-gray-800 z-10 bg-white dark:bg-gray-950">
+          <div className="absolute left-0 top-0 w-16 h-full border-r border-gray-200 dark:border-neutral-900 z-10 bg-white dark:bg-neutral-950">
             {hours.map((hour) => (
               <div 
                 key={hour.getTime()} 
-                className="absolute w-full border-t border-gray-200 dark:border-gray-800 flex items-start justify-center -mt-3 text-xs text-gray-500 dark:text-gray-400"
-                style={{ top: `${hour.getHours() * HOUR_HEIGHT}px`, height: `${HOUR_HEIGHT}px` }}
+                className="absolute w-full border-t border-gray-200 dark:border-neutral-900 flex items-start justify-center text-xs text-gray-500 dark:text-neutral-400"
+                style={{ 
+                  top: `${hour.getHours() * HOUR_HEIGHT}px`,
+                  paddingTop: hour.getHours() === 0 ? '3px' : '0' // Ensure 12 AM is visible 
+                }}
               >
-                <span>{format(hour, 'h a')}</span>
+                <span className="mt-1">{format(hour, 'h a')}</span>
               </div>
             ))}
           </div>
           
           {/* Hour grid lines */}
-          <div className="absolute left-16 right-0 top-0 h-full bg-white dark:bg-gray-950">
+          <div className="absolute left-16 right-0 top-0 h-full bg-white dark:bg-neutral-950">
             {hours.map((hour) => (
               <div 
                 key={hour.getTime()} 
-                className="absolute w-full border-t border-gray-200 dark:border-gray-800" 
+                className="absolute w-full border-t border-gray-200 dark:border-neutral-900" 
                 style={{ top: `${hour.getHours() * HOUR_HEIGHT}px`, height: `${HOUR_HEIGHT}px` }}
               />
             ))}
@@ -169,12 +172,13 @@ const DayView: React.FC<Props> = ({ className = '' }) => {
           
           {/* Current time indicator */}
           <div 
-            className="absolute left-0 right-0 border-t border-red-500 z-20"
+            className="absolute left-0 right-0 border-t-2 border-red-500 z-20"
             style={{ 
-              top: `${(new Date().getHours() * 60 + new Date().getMinutes()) * MIN_HEIGHT}px` 
+              top: `${(new Date().getHours() * 60 + new Date().getMinutes()) * MIN_HEIGHT}px`,
+              marginTop: '-1px' // Adjust to align with grid lines
             }}
           >
-            <div className="absolute -top-2 -left-1 w-3 h-3 rounded-full bg-red-500" />
+            <div className="absolute -top-1.5 -left-1 w-3 h-3 rounded-full bg-red-500" />
           </div>
         </div>
       </div>

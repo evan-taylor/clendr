@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useCalendar } from '../CalendarContext';
 import { CalendarEvent } from '../types';
 import { calculateNewEventTime } from '../utils/dragUtils';
@@ -46,7 +46,10 @@ export default function CalendarEventItem({
   const [showActions, setShowActions] = useState(false);
   const eventRef = useRef<HTMLDivElement>(null);
   const dragStartPosition = useRef({ x: 0, y: 0 });
-  const dragStartEventTimes = useRef({ startTime: '', endTime: '' });
+  const dragStartEventTimes = useRef<{ startTime: string | Date; endTime: string | Date }>({ 
+    startTime: '', 
+    endTime: '' 
+  });
   
   const startTime = new Date(event.start_time);
   const endTime = new Date(event.end_time);
@@ -64,7 +67,7 @@ export default function CalendarEventItem({
   
   const colorTheme = getColorTheme();
   
-  const getEventStyles = () => {
+  const getEventStyles = (): React.CSSProperties => {
     // Basic styles that apply to all views
     const styles: React.CSSProperties = {};
     
@@ -81,7 +84,7 @@ export default function CalendarEventItem({
         ...styles,
         backgroundColor: colorTheme.bg,
         borderLeft: `3px solid ${colorTheme.border}`,
-        position: 'absolute',
+        position: 'absolute' as const,
         width: view === 'day' ? 'calc(100% - 8px)' : 'calc(100% - 4px)',
         cursor: isDraggable ? 'move' : 'pointer',
       };

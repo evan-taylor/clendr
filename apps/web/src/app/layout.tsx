@@ -1,11 +1,23 @@
 import '@/styles/globals.css';
 import { Inter, Roboto_Mono } from 'next/font/google';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Navbar from '@/components/Navigation/Navbar';
 import { headers } from 'next/headers';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/lib/auth';
+import ReduxStoreProvider from '@/store/Provider';
+import dynamic from 'next/dynamic';
 import Script from 'next/script';
+
+const ServiceWorkerProvider = dynamic(
+  () => import('@/components/ServiceWorkerProvider'),
+  { ssr: false }
+);
+
+const Notifications = dynamic(
+  () => import('@/components/ui/Notification'),
+  { ssr: false }
+);
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,10 +31,34 @@ const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
 });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: '#0ea5e9',
+};
+
 export const metadata: Metadata = {
   title: 'Clendr - The Lightning-Fast AI-Powered Calendar App',
   description: 'Transform how you schedule your time with Clendr, the intelligent calendar app that helps you manage your schedule effortlessly.',
   keywords: ['calendar', 'scheduling', 'ai', 'productivity', 'time management'],
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Clendr',
+  },
+  icons: {
+    icon: [
+      { url: '/images/favicon.ico', sizes: '32x32' },
+      { url: '/images/icons/icon-192x192.png', sizes: '192x192' },
+      { url: '/images/icons/icon-512x512.png', sizes: '512x512' },
+    ],
+    apple: [
+      { url: '/images/icons/apple-icon-180x180.png', sizes: '180x180' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -75,12 +111,17 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider>
-            {isLandingPage && <Navbar />}
-            <main className={isLandingPage ? 'pt-16' : ''}>{children}</main>
-          </AuthProvider>
-        </ThemeProvider>
+        <ReduxStoreProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ServiceWorkerProvider>
+              <AuthProvider>
+                {isLandingPage && <Navbar />}
+                <main className={isLandingPage ? 'pt-16' : ''}>{children}</main>
+                <Notifications />
+              </AuthProvider>
+            </ServiceWorkerProvider>
+          </ThemeProvider>
+        </ReduxStoreProvider>
       </body>
     </html>
   );

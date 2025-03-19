@@ -1,13 +1,18 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// Define routes that require authentication
+const protectedRoutes = ['/calendar', '/settings', '/profile', '/account', '/tasks'];
+
 export async function updateSession(request: NextRequest) {
+  // Create initial response object
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
-  })
+  });
 
+  // Create Supabase server client
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -17,11 +22,14 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
+          // Set cookie on request (for this middleware)
           request.cookies.set({
             name,
             value,
             ...options,
           })
+          
+          // Set cookie on response (for the browser)
           response = NextResponse.next({
             request: {
               headers: request.headers,
@@ -34,11 +42,14 @@ export async function updateSession(request: NextRequest) {
           })
         },
         remove(name: string, options: CookieOptions) {
+          // Remove cookie from request
           request.cookies.set({
             name,
             value: '',
             ...options,
           })
+          
+          // Remove cookie from response
           response = NextResponse.next({
             request: {
               headers: request.headers,
@@ -54,32 +65,36 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // This will refresh session if expired - required for Server Components
-  // https://supabase.com/docs/guides/auth/server-side/nextjs
-  await supabase.auth.getUser()
-
-  // If accessing a protected route, get the user and redirect if not logged in
-  const url = new URL(request.url)
-  const protectedRoutes = ['/calendar', '/tasks', '/settings', '/profile']
+  // This will refresh session cookies if needed
+  const { data: { user } } = await supabase.auth.getUser();
   
-  if (protectedRoutes.some(route => url.pathname.startsWith(route))) {
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      const redirectUrl = new URL('/login', request.url)
-      redirectUrl.searchParams.set('next', url.pathname)
-      return NextResponse.redirect(redirectUrl)
-    }
+  // Get the requested URL path
+  const url = new URL(request.url);
+  const path = url.pathname;
+  
+  // Handle authentication checks
+  // If the route is protected and user isn't authenticated
+  if (isProtectedRoute(path) && !user) {
+    // Store the requested URL to redirect back after login
+    const redirectUrl = new URL('/login', request.url);
+    redirectUrl.searchParams.set('next', path);
+    return NextResponse.redirect(redirectUrl);
   }
   
-  // If going to login page but already authenticated, redirect to calendar
-  if (url.pathname.startsWith('/login')) {
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (user) {
-      return NextResponse.redirect(new URL('/calendar', request.url))
-    }
+  // If trying to access login/signup pages while already authenticated
+  if ((path.startsWith('/login') || path.startsWith('/signup')) && user) {
+    // Redirect to calendar
+    return NextResponse.redirect(new URL('/calendar', request.url));
   }
 
-  return response
+  return response;
+}
+
+/**
+ * Check if the path matches a protected route pattern
+ */
+function isProtectedRoute(path: string): boolean {
+  return protectedRoutes.some(route => 
+    path === route || path.startsWith(`${route}/`)
+  );
 } 

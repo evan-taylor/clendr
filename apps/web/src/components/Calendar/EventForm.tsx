@@ -4,8 +4,10 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Dialog } from '@headlessui/react';
 import { XIcon } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
-import { getUserCalendars, createCalendarEvent, updateCalendarEvent, CalendarEvent } from '@/lib/googleCalendar';
+import { getUserCalendars, createCalendarEvent, updateCalendarEvent } from '@/lib/googleCalendar';
+import { CalendarEvent } from '@/store/slices/calendarSlice';
 import { format, parseISO, addHours } from 'date-fns';
+import { CalendarEvent as GoogleCalendarEvent } from '@/components/Calendar/types';
 
 interface EventFormProps {
   isOpen: boolean;
@@ -38,12 +40,12 @@ export default function EventForm({ isOpen, onClose, event, selectedDate, onSucc
   const eventDefaults = useMemo(() => {
     if (event?.id) {
       // Edit existing event
-      const startDateTime = event.start?.dateTime ? parseISO(event.start.dateTime) : new Date();
-      const endDateTime = event.end?.dateTime ? parseISO(event.end.dateTime) : addHours(startDateTime, 1);
+      const startDateTime = event.startDate ? new Date(event.startDate) : new Date();
+      const endDateTime = event.endDate ? new Date(event.endDate) : addHours(startDateTime, 1);
       
       return {
-        calendarId: '', // Will be set once calendars are loaded
-        summary: event.summary || '',
+        calendarId: event.calendarId || '',
+        summary: event.title || '',
         description: event.description || '',
         location: event.location || '',
         startDate: format(startDateTime, 'yyyy-MM-dd'),
@@ -155,10 +157,15 @@ export default function EventForm({ isOpen, onClose, event, selectedDate, onSucc
       const startDateTime = `${formState.startDate}T${formState.startTime}:00`;
       const endDateTime = `${formState.endDate}T${formState.endTime}:00`;
       
-      const eventData = {
+      // Create event data for Google Calendar API
+      const googleEventData: GoogleCalendarEvent = {
+        id: event?.id || '',
+        title: formState.summary,
         summary: formState.summary,
         description: formState.description,
         location: formState.location,
+        start_time: startDateTime,
+        end_time: endDateTime,
         start: {
           dateTime: startDateTime,
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -172,17 +179,17 @@ export default function EventForm({ isOpen, onClose, event, selectedDate, onSucc
       if (event?.id) {
         // Update existing event
         await updateCalendarEvent(
+          user.id,
           formState.calendarId,
           event.id,
-          session.provider_token,
-          eventData
+          googleEventData
         );
       } else {
         // Create new event
         await createCalendarEvent(
+          user.id,
           formState.calendarId,
-          session.provider_token,
-          eventData
+          googleEventData
         );
       }
       
@@ -208,9 +215,9 @@ export default function EventForm({ isOpen, onClose, event, selectedDate, onSucc
       onClose={onClose}
       className="fixed z-50 inset-0 overflow-y-auto"
     >
+      <div className="fixed inset-0 bg-black bg-opacity-30 transition-opacity" aria-hidden="true" />
+      
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30 transition-opacity" />
-        
         <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="flex justify-between items-start">
