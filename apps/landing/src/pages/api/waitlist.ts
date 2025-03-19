@@ -32,7 +32,6 @@ export default async function handler(
       return res.status(400).json({ success: false, message: 'Email is required' });
     }
 
-    // Basic email validation with more comprehensive regex
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ success: false, message: 'Invalid email format' });
@@ -71,9 +70,9 @@ export default async function handler(
           subject: 'Welcome to the Clendr Waitlist!',
           text: `Hey ${firstNameOrDefault},
 
-Thanks for joining the Clendr waitlist! I'll keep you updated on our progress and let you know when Clendr is ready for you to try.
+Thanks for joining the Clendr waitlist! I'll let you know when Clendr is ready for you to try.
 
-In the meantime, have any questions, suggestions, or things you would like to see in Clendr? If so, please reply to this email - it would help me a TON. 🙏
+In the meantime, have any questions, suggestions, or things you would like to see in Clendr? If so, please reply to this email - your feedback means a TON. 🙏
 
 Best,
 evan taylor
