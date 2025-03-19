@@ -54,7 +54,7 @@ export default async function handler(
         
         // Optionally send confirmation email
         await resend.emails.send({
-          from: 'Clendr <evan@clendr.app>',
+          from: 'Clendr <evan@clendr.com>',
           to: email,
           subject: 'Welcome to the Clendr Waitlist!',
           html: `
