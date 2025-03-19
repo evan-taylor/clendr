@@ -154,12 +154,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       
       // Get the base URL for redirects
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${baseUrl}/auth/callback`,
+          redirectTo: `${siteUrl}/auth/callback`,
           scopes: 'email profile https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
           queryParams: {
             access_type: 'offline',
@@ -175,7 +175,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       if (data?.url) {
-        window.location.href = data.url;
+        // Use window.location.replace for a cleaner redirect
+        window.location.replace(data.url);
       }
     } catch (error) {
       console.error('Exception during Google sign in:', error);
