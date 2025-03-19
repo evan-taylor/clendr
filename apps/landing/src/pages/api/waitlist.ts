@@ -54,7 +54,7 @@ export default async function handler(
         
         // Optionally send confirmation email
         await resend.emails.send({
-          from: 'Clendr <hello@clendr.app>',
+          from: 'Clendr <evan@clendr.app>',
           to: email,
           subject: 'Welcome to the Clendr Waitlist!',
           html: `
@@ -67,9 +67,10 @@ export default async function handler(
                       Thanks for joining the Clendr waitlist! We'll keep you updated on our progress and let you know when Clendr is ready for you to try.
                     </p>
                     <p style="margin-bottom: 16px; color: #4b5563; line-height: 1.6;">
-                      In the meantime, you can follow us on
-                      <a href="https://twitter.com/clendrapp" style="color: #0ea5e9; text-decoration: none; font-weight: 500;">Twitter</a>
-                      to stay in the loop.
+                      In the meantime, have any questions, suggestions, or things you would like to see in Clendr? If so, please reply to this email - it would help us a TON. 🙏
+                    </p>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
+                      Best,
                     </p>
                     <p style="color: #6b7280; font-size: 14px; margin-top: 32px;">
                       The Clendr Team
@@ -86,8 +87,6 @@ export default async function handler(
         // Just log and continue
       }
     } else {
-      // For development when Resend isn't configured
-      console.log(`[DEV] Added to waitlist: ${email}`);
     }
 
     return res.status(200).json({ 
