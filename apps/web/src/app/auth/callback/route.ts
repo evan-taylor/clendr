@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const code = requestUrl.searchParams.get('code');
     const next = requestUrl.searchParams.get('next') || '/calendar';
     
-    // Create a Supabase server client - make sure to await it
+    // Create a Supabase server client
     const supabase = await createClient();
     
     if (code) {
@@ -26,18 +26,18 @@ export async function GET(request: NextRequest) {
         console.error('Error exchanging code for session:', error);
         // Redirect to login with error message
         return NextResponse.redirect(
-          new URL(`/login?error=Authentication%20failed:%20${encodeURIComponent(error.message)}`, request.url)
+          new URL(`/login?error=Authentication%20failed:%20${encodeURIComponent(error.message)}`, process.env.NEXT_PUBLIC_SITE_URL)
         );
       }
     }
     
     // Redirect to the requested page or calendar by default
-    return NextResponse.redirect(new URL(next, request.url));
+    return NextResponse.redirect(new URL(next, process.env.NEXT_PUBLIC_SITE_URL));
   } catch (error) {
     console.error('Unexpected error in auth callback:', error);
     // Redirect to login with generic error message
     return NextResponse.redirect(
-      new URL('/login?error=Authentication%20failed', request.url)
+      new URL('/login?error=Authentication%20failed', process.env.NEXT_PUBLIC_SITE_URL)
     );
   }
 } 
