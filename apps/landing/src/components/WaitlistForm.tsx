@@ -93,7 +93,7 @@ export const WaitlistForm = ({ className = '' }: WaitlistFormProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            You're on the List!
+            You're on the list!
           </motion.h3>
           <motion.p 
             className="text-lg text-zinc-400"
