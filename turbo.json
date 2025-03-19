@@ -1,7 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["RESEND_API_KEY", "RESEND_AUDIENCE_ID"],
+  "globalEnv": [
+    "RESEND_API_KEY",
+    "RESEND_AUDIENCE_ID",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
