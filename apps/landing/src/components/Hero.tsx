@@ -144,14 +144,14 @@ export const Hero = ({ title, subtitle, className = '' }: HeroProps) => {
                               i % 7 === 0 || i % 7 === 6 
                                 ? 'bg-zinc-800/30' 
                                 : i === 15 
-                                  ? 'bg-zinc-100 text-zinc-900' 
+                                  ? 'bg-[#7dd3f6] text-zinc-900' 
                                   : 'bg-zinc-800/10'
                             }`}
                           >
                             <span className="mb-1">{i + 1}</span>
                             {i === 10 && <div className="h-1 w-full bg-zinc-700/50 rounded-full mt-auto"></div>}
                             {i === 15 && <div className="h-1 w-full bg-zinc-900/20 rounded-full mt-auto"></div>}
-                            {i === 22 && <div className="h-1 w-full bg-zinc-700/50 rounded-full mt-auto"></div>}
+                            {i === 22 && <div className="h-1 w-full bg-[#7dd3f6]/50 rounded-full mt-auto"></div>}
                           </div>
                         ))}
                       </div>

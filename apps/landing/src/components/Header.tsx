@@ -31,12 +31,11 @@ export const Header = ({ className = '' }: HeaderProps) => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center interactive">
-            <div className="w-9 h-9 mr-2 glass-icon rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-zinc-100">Clendr</span>
+            <img
+              src="/clendr-white.png"
+              alt="Clendr"
+              className="h-8 w-auto transition-all duration-300"
+            />
           </Link>
 
           {/* Desktop Navigation */}

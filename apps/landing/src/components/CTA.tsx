@@ -55,7 +55,7 @@ const CTA = ({ className = '' }: CTAProps) => {
             {/* Background subtle gradient */}
             <div className="absolute inset-0 -z-10 overflow-hidden">
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-br from-zinc-900/80 via-zinc-900 to-zinc-800/80"
+                className="absolute inset-0 bg-gradient-to-br from-zinc-900/80 via-zinc-900 to-[#7dd3f6]/10"
                 animate={{ 
                   backgroundPosition: ['0% 0%', '100% 100%', '0% 0%']
                 }}
@@ -65,8 +65,8 @@ const CTA = ({ className = '' }: CTAProps) => {
             </div>
             
             {/* Geometric accent shape - subtle */}
-            <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-zinc-700/10 rounded-full blur-xl"></div>
-            <div className="absolute -right-20 -bottom-20 w-80 h-80 border border-zinc-700/10 rounded-full"></div>
+            <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#7dd3f6]/10 rounded-full blur-xl"></div>
+            <div className="absolute -right-20 -bottom-20 w-80 h-80 border border-[#7dd3f6]/10 rounded-full"></div>
             
             <div className="text-center mb-12 relative z-10">
               <motion.h2 
@@ -98,7 +98,7 @@ const CTA = ({ className = '' }: CTAProps) => {
               >
                 <motion.a 
                   href="/waitlist"
-                  className="btn-primary px-8 py-4 text-base"
+                  className="cta-button px-8 py-4 text-base"
                   whileHover={{ 
                     y: -2,
                     boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)'

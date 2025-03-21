@@ -38,7 +38,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
   return (
     <footer className={`relative overflow-hidden text-zinc-100 py-16 ${className}`}>
       {/* Top border gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent"></div>
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7dd3f6] to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <motion.div 
@@ -50,12 +50,11 @@ export const Footer = ({ className = '' }: FooterProps) => {
         >
           <motion.div className="mb-8 md:mb-0" variants={itemVariants}>
             <div className="flex items-center">
-              <div className="w-10 h-10 mr-3 glass-icon flex items-center justify-center">
-                <svg className="w-6 h-6 text-zinc-100" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-zinc-100">Clendr</h2>
+              <img
+                src="/clendr-white.png"
+                alt="Clendr"
+                className="h-8 w-auto mr-2"
+              />
             </div>
             <p className="text-zinc-400 mt-2 ml-1">The future of calendar apps</p>
             
@@ -83,7 +82,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
           className="border-t border-zinc-800/30 mt-8 pt-8 text-center md:text-left text-zinc-500 text-sm"
           variants={itemVariants}
         >
-          <p>&copy; {new Date().getFullYear()} Clendr. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Clendr. All rights reserved. <span className="text-[#7dd3f6]">Made with ♥</span></p>
         </motion.div>
       </div>
     </footer>

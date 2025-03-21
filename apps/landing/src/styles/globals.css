@@ -4,6 +4,12 @@
 
 /* Custom styles for sophisticated dark landing page */
 @layer base {
+  :root {
+    --accent-color: #7dd3f6;
+    --accent-color-dark: #5ab7db;
+    --accent-color-light: #a5e0fa;
+  }
+  
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
@@ -38,17 +44,32 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100;
   }
   
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, var(--accent-color-light), var(--accent-color), var(--accent-color-dark));
+  }
+  
   /* Sophisticated button styles */
   .btn-primary {
     @apply inline-flex items-center justify-center text-zinc-950 rounded-md font-medium transition duration-300
-           bg-zinc-100 hover:bg-white
            shadow-md hover:shadow-lg focus:ring-2 focus:ring-zinc-400/50 focus:outline-none;
+    background-color: var(--accent-color);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--accent-color-light);
   }
   
   .btn-secondary {
     @apply inline-flex items-center justify-center text-zinc-100 bg-transparent rounded-md font-medium transition duration-300
-           border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-900/30 backdrop-blur-sm
-           shadow-sm hover:shadow-md focus:ring-2 focus:ring-zinc-700/50 focus:outline-none;
+           shadow-sm hover:shadow-md focus:outline-none;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+  }
+  
+  .btn-secondary:hover {
+    background-color: rgba(125, 211, 246, 0.1);
+    border-color: var(--accent-color-light);
   }
   
   /* Floating Card */
@@ -68,8 +89,13 @@
   /* Elegant CTA button */
   .cta-button {
     @apply px-6 py-3 rounded-md font-medium text-zinc-950 transition duration-300 
-           bg-zinc-100 hover:bg-white inline-flex items-center
+           inline-flex items-center
            shadow-lg hover:shadow-xl;
+    background-color: var(--accent-color);
+  }
+  
+  .cta-button:hover {
+    background-color: var(--accent-color-light);
   }
   
   /* Subtle glow shadow */

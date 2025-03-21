@@ -43,7 +43,15 @@ export default function Home() {
         <title>Clendr | AI-powered calendar app for effortless scheduling</title>
         <meta name="description" content="Transform how you schedule your time with Clendr. Our AI-powered calendar app optimizes your schedule with smart time blocks and intelligent suggestions." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Favicons */}
         <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="msapplication-TileColor" content="#7dd3f6" />
+        <meta name="theme-color" content="#7dd3f6" />
         
         {/* Open Graph meta tags for social sharing */}
         <meta property="og:title" content="Clendr | AI-powered calendar app for effortless scheduling" />
@@ -110,7 +118,7 @@ export default function Home() {
         <main className="relative z-10">
           {/* Hero Section */}
           <Hero 
-            title={<>Master your time with <span className="text-gradient">perfect balance</span></>}
+            title={<>Master your time with <span className="text-gradient-accent">perfect balance</span></>}
             subtitle="The sophisticated AI calendar that intelligently orchestrates your schedule for optimized productivity and improved focus."
             className="pt-40 pb-24"
           />
