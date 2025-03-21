@@ -82,7 +82,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
           className="border-t border-zinc-800/30 mt-8 pt-8 text-center md:text-left text-zinc-500 text-sm"
           variants={itemVariants}
         >
-          <p>&copy; {new Date().getFullYear()} Clendr. All rights reserved. <span className="text-[#7dd3f6]">Made with ♥</span></p>
+          <p>&copy; {new Date().getFullYear()} Clendr. All rights reserved. <span className="text-[#7dd3f6]">Made with ♥ in CA</span></p>
         </motion.div>
       </div>
     </footer>
