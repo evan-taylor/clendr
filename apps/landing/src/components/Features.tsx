@@ -42,8 +42,8 @@ export const Features = ({ className = '' }: FeaturesProps) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
-      title: 'Smart Scheduling',
-      description: 'AI algorithms learn your preferences and suggest optimal time blocks for different activities.',
+      title: 'Efficient Scheduling',
+      description: 'Streamlined calendar management with quick event creation and intuitive time blocking.',
     },
     {
       icon: (
@@ -51,8 +51,8 @@ export const Features = ({ className = '' }: FeaturesProps) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
       ),
-      title: 'Intelligent Insights',
-      description: 'Get personalized productivity insights and recommendations based on your schedule patterns.',
+      title: 'Schedule Insights',
+      description: 'View your time allocation and scheduling patterns with simple, helpful statistics.',
     },
     {
       icon: (
@@ -61,7 +61,7 @@ export const Features = ({ className = '' }: FeaturesProps) => {
         </svg>
       ),
       title: 'Offline Support',
-      description: "Access and update your calendar anytime, even without internet. Changes sync automatically when reconnected.",
+      description: "Access your calendar offline. Changes sync automatically when you're back online.",
     },
     {
       icon: (
@@ -69,8 +69,8 @@ export const Features = ({ className = '' }: FeaturesProps) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       ),
-      title: 'Privacy-Focused',
-      description: 'Your data stays private with end-to-end encryption and local-first processing technology.',
+      title: 'Data Privacy',
+      description: 'Your calendar data is stored securely and we never share your personal information.',
     },
     {
       icon: (
@@ -78,8 +78,8 @@ export const Features = ({ className = '' }: FeaturesProps) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
         </svg>
       ),
-      title: 'Seamless Integration',
-      description: 'Connects with your favorite tools and services to create a unified productivity ecosystem.',
+      title: 'Easy Integration',
+      description: 'Import and export your calendar data in standard formats.',
     },
     {
       icon: (
@@ -87,8 +87,8 @@ export const Features = ({ className = '' }: FeaturesProps) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>
       ),
-      title: 'Cross-Platform',
-      description: 'Enjoy a consistent experience across all your devices with real-time synchronization.',
+      title: 'Web & Mobile',
+      description: 'Access your calendar from any device through our responsive web interface.',
     },
   ];
 
