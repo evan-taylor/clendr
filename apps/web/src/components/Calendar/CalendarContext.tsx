@@ -88,10 +88,19 @@ export const CalendarProvider = ({
     }
   }, [currentDate, onDateChange]);
 
-  // Update events when initialEvents changes
+  // Update events when initialEvents changes, but avoid unnecessary rerenders
   useEffect(() => {
     console.log('CalendarContext: initialEvents updated:', initialEvents);
-    setEvents(initialEvents);
+    if (initialEvents.length > 0) {
+      // Only set events if they're different from current events
+      // by comparing JSON strings (simple but effective for this use case)
+      const currentEventsJSON = JSON.stringify(events.map(e => e.id).sort());
+      const newEventsJSON = JSON.stringify(initialEvents.map(e => e.id).sort());
+      
+      if (currentEventsJSON !== newEventsJSON) {
+        setEvents(initialEvents);
+      }
+    }
   }, [initialEvents]);
 
   // Debug events on every render

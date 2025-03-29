@@ -378,8 +378,14 @@ export default function Calendar({
           dateRange.end
         );
         
-        // Update context state directly
-        calendarContext.setEvents(events);
+        // Update context state directly but prevent infinite loops
+        // by checking if events have actually changed
+        const currentEventIds = new Set(calendarContext.events.map(e => e.id));
+        const newEvents = events.filter(e => !currentEventIds.has(e.id));
+        
+        if (newEvents.length > 0) {
+          calendarContext.setEvents([...calendarContext.events, ...newEvents]);
+        }
       } catch (error) {
         console.error('Error fetching events:', error);
       } finally {
@@ -388,7 +394,7 @@ export default function Calendar({
     };
     
     fetchEvents();
-  }, [user?.id, dateRange, calendarContext]);
+  }, [user?.id, dateRange.start.toISOString(), dateRange.end.toISOString()]);
   
   // Update event handler to keep parent component in sync
   useEffect(() => {
@@ -414,15 +420,20 @@ export default function Calendar({
           dateRange.end
         );
         
-        // Update context state directly
-        calendarContext.setEvents(events);
+        // Update context state directly, preventing infinite loops
+        const currentEventIds = new Set(calendarContext.events.map(e => e.id));
+        const newEvents = events.filter(e => !currentEventIds.has(e.id));
+        
+        if (newEvents.length > 0) {
+          calendarContext.setEvents([...calendarContext.events, ...newEvents]);
+        }
       } catch (error) {
         console.error('Error fetching events after connect:', error);
       } finally {
         setIsLoading(false);
       }
     }
-  }, [user?.id, dateRange, refreshSession, calendarContext]);
+  }, [user?.id, dateRange.start.toISOString(), dateRange.end.toISOString(), refreshSession]);
   
   // Handle sign out
   const handleSignOut = useCallback(async () => {
