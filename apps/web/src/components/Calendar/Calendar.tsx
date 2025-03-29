@@ -241,7 +241,10 @@ function AppHeader({
           
           {isUserMenuOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-neutral-900 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-neutral-800">
-              <button className="flex w-full items-center text-left px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800">
+              <button 
+                onClick={() => console.log('Settings clicked - not implemented yet')}
+                className="flex w-full items-center text-left px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800"
+              >
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </button>

@@ -72,14 +72,14 @@ export default function UserMenu() {
           </Menu.Item>
           <Menu.Item>
             {({ active }) => (
-              <a
-                href="/settings"
+              <button
+                onClick={() => console.log('Settings clicked - not implemented yet')}
                 className={`${
                   active ? 'bg-gray-100' : ''
-                } block px-4 py-2 text-sm text-gray-700`}
+                } block w-full text-left px-4 py-2 text-sm text-gray-700`}
               >
                 Settings
-              </a>
+              </button>
             )}
           </Menu.Item>
           <Menu.Item>

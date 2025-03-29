@@ -2,7 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Define routes that require authentication
-const protectedRoutes = ['/calendar', '/settings', '/profile', '/account', '/tasks'];
+const protectedRoutes = ['/calendar', '/profile', '/account', '/tasks'];
 
 export async function updateSession(request: NextRequest) {
   // Create initial response object

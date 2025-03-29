@@ -249,16 +249,15 @@ export default function Sidebar({ className = '', collapsed = false }: SidebarPr
 
         <div className={`p-2 border-t border-gray-100 dark:border-neutral-900 ${collapsed ? 'flex flex-col items-center gap-2' : ''}`}>
           <OfflineIndicator collapsed={collapsed} />
-          <Link href="/settings" className={`flex items-center rounded-md ${
-            collapsed ? 'justify-center p-1.5' : 'px-2 py-1.5'
-          } ${
-            pathname === '/settings' 
-              ? 'bg-gray-100 dark:bg-neutral-900 text-gray-900 dark:text-neutral-100' 
-              : 'text-gray-700 dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-900 dark:hover:text-neutral-100'
-          }`}>
+          <button 
+            className={`flex items-center rounded-md ${
+              collapsed ? 'p-2 mx-auto' : 'p-2'
+            } text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800`}
+            onClick={() => console.log('Settings clicked - not implemented yet')}
+          >
             <Settings size={16} className={collapsed ? '' : 'mr-2'} />
             {!collapsed && <span className="text-sm">Settings</span>}
-          </Link>
+          </button>
         </div>
       </div>
 

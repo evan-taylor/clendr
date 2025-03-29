@@ -60,7 +60,7 @@ export async function updateSession(request: NextRequest) {
 
   // If accessing a protected route, get the user and redirect if not logged in
   const url = new URL(request.url)
-  const protectedRoutes = ['/calendar', '/tasks', '/settings', '/profile']
+  const protectedRoutes = ['/calendar', '/tasks', '/profile']
   
   if (protectedRoutes.some(route => url.pathname.startsWith(route))) {
     const { data: { user } } = await supabase.auth.getUser()
