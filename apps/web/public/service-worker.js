@@ -19,8 +19,6 @@ const STATIC_ASSETS = [
     '/index.html',
     '/manifest.json',
     '/favicon.ico',
-    '/images/icons/icon-192x192.png',
-    '/images/icons/icon-512x512.png',
     '/offline.html',
 ];
 
@@ -42,7 +40,17 @@ self.addEventListener('install', (event) => {
         caches.open(STATIC_CACHE)
             .then((cache) => {
                 console.log('[Service Worker] Precaching App Shell');
-                return cache.addAll(STATIC_ASSETS);
+                // Use individual addAll for better error handling
+                return Promise.allSettled(
+                    STATIC_ASSETS.map(asset =>
+                        cache.add(asset).catch(err => {
+                            console.error(`[Service Worker] Failed to cache ${asset}:`, err);
+                        })
+                    )
+                );
+            })
+            .catch(err => {
+                console.error('[Service Worker] Precaching failed:', err);
             })
     );
 });
