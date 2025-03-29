@@ -19,7 +19,7 @@ type CalendarViewProps = {
 export default function CalendarView({ events = [] }: CalendarViewProps) {
   return (
     <div className="w-full h-full">
-      <Calendar initialEvents={events} />
+      <Calendar />
     </div>
   );
 } 

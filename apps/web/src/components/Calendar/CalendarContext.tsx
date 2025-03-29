@@ -5,12 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { CalendarEvent, CalendarContextType, ViewType } from './types';
 import React from 'react';
 
-// Extend the context type to include edit state
+// Extend the context type to include edit state and setEvents
 interface ExtendedCalendarContextType extends CalendarContextType {
   isEditing: boolean;
   eventToEdit: CalendarEvent | null;
   startEditing: (event: CalendarEvent) => void;
   stopEditing: () => void;
+  setEvents: (events: CalendarEvent[]) => void;
 }
 
 const CalendarContext = createContext<ExtendedCalendarContextType | undefined>(undefined);
@@ -143,6 +144,7 @@ export const CalendarProvider = ({
     eventToEdit,
     startEditing,
     stopEditing,
+    setEvents,
   };
 
   return (

@@ -52,7 +52,6 @@ import CalendarSkeleton from './CalendarSkeleton';
 import Image from 'next/image';
 
 type CalendarProps = {
-  initialEvents?: CalendarEvent[];
   initialView?: ViewType;
   initialDate?: Date;
   onEventChange?: (events: CalendarEvent[]) => void;
@@ -317,17 +316,18 @@ function CreateButton() {
 }
 
 export default function Calendar({ 
-  initialEvents = [], 
   initialView = 'month',
   initialDate = new Date(),
   onEventChange
 }: CalendarProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showConnectDialog, setShowConnectDialog] = useState(false);
-  const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
   const [isLoading, setIsLoading] = useState(true);
   const [effectiveView, setEffectiveView] = useState<ViewType>(initialView);
   const { user, session, signOut, refreshSession } = useAuth();
+  
+  // Get setEvents from the context to update it directly
+  const calendarContext = useCalendar(); 
   
   // Track the displayed date range
   const [dateRange, setDateRange] = useState({
@@ -378,7 +378,8 @@ export default function Calendar({
           dateRange.end
         );
         
-        setEvents(events);
+        // Update context state directly
+        calendarContext.setEvents(events);
       } catch (error) {
         console.error('Error fetching events:', error);
       } finally {
@@ -387,14 +388,15 @@ export default function Calendar({
     };
     
     fetchEvents();
-  }, [user?.id, dateRange]);
+  }, [user?.id, dateRange, calendarContext]);
   
   // Update event handler to keep parent component in sync
   useEffect(() => {
     if (onEventChange) {
-      onEventChange(events);
+      // Read events directly from context if needed for parent notification
+      onEventChange(calendarContext.events);
     }
-  }, [events, onEventChange]);
+  }, [calendarContext.events, onEventChange]);
   
   // Handle successful calendar connection
   const handleConnectSuccess = useCallback(async () => {
@@ -412,14 +414,15 @@ export default function Calendar({
           dateRange.end
         );
         
-        setEvents(events);
+        // Update context state directly
+        calendarContext.setEvents(events);
       } catch (error) {
         console.error('Error fetching events after connect:', error);
       } finally {
         setIsLoading(false);
       }
     }
-  }, [user?.id, dateRange, refreshSession]);
+  }, [user?.id, dateRange, refreshSession, calendarContext]);
   
   // Handle sign out
   const handleSignOut = useCallback(async () => {
@@ -432,7 +435,6 @@ export default function Calendar({
   
   return (
     <CalendarProvider 
-      initialEvents={events} 
       initialView={effectiveView}
       initialDate={initialDate}
       onDateChange={handleDateChange}
