@@ -11,10 +11,17 @@ import { cn } from '../../../utils/cn';
 import { Plus } from 'lucide-react';
 
 export default function MonthView() {
-  const { currentDate, events, deleteEvent } = useCalendar();
+  const { 
+    currentDate, 
+    events, 
+    deleteEvent, 
+    startEditing, 
+    isEditing, 
+    eventToEdit, 
+    stopEditing 
+  } = useCalendar();
+  
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [showEventForm, setShowEventForm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   
   const weeks = getMonthWeeks(currentDate);
   
@@ -42,13 +49,9 @@ export default function MonthView() {
   
   const handleDayClick = (day: Date) => {
     setSelectedDate(day);
-    setSelectedEvent(null);
-    setShowEventForm(true);
-  };
-  
-  const handleEventEdit = (event: CalendarEvent) => {
-    setSelectedEvent(event);
-    setShowEventForm(true);
+    // Removed setShowEventForm(true)
+    // Removed setSelectedEvent(null)
+    // TODO: Decide if clicking a day should open a *creation* form
   };
   
   const handleEventDelete = (eventId: string) => {
@@ -125,7 +128,8 @@ export default function MonthView() {
                         }
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleEventEdit(event);
+                          // Use context function to start editing
+                          startEditing(event);
                         }}
                       >
                         {event.title}
@@ -151,13 +155,13 @@ export default function MonthView() {
         ))}
       </div>
       
-      {/* Event form modal */}
-      {showEventForm && (
+      {/* Event form modal - controlled by context */}
+      {isEditing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <EventForm
-            initialData={selectedEvent || undefined}
-            selectedDate={selectedDate || undefined}
-            onClose={() => setShowEventForm(false)}
+            initialData={eventToEdit || undefined} // Pass event being edited
+            selectedDate={selectedDate || undefined} // Keep selectedDate for potential creation context?
+            onClose={stopEditing} // Use context function to close
           />
         </div>
       )}

@@ -1,24 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
-// Define routes that require authentication
-const protectedRoutes = [
-  '/calendar',
-  '/settings',
-  '/account'
-];
-
-// Define public routes that shouldn't redirect when authenticated
-const publicRoutes = [
-  '/',
-  '/features',
-  '/pricing',
-  '/about',
-  '/contact',
-  '/login',
-  '/signup',
-  '/auth/callback'
-];
+// No longer defining routes here, logic is handled in updateSession
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -26,14 +9,7 @@ export async function middleware(request: NextRequest) {
   return await updateSession(request);
 }
 
-/**
- * Check if the path matches a protected route pattern
- */
-function isProtectedRoute(path: string): boolean {
-  return protectedRoutes.some(route => 
-    path === route || path.startsWith(`${route}/`)
-  );
-}
+// Removed unused isProtectedRoute function
 
 /**
  * Define paths that require the middleware

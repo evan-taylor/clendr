@@ -5,7 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { CalendarEvent, CalendarContextType, ViewType } from './types';
 import React from 'react';
 
-const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
+// Extend the context type to include edit state
+interface ExtendedCalendarContextType extends CalendarContextType {
+  isEditing: boolean;
+  eventToEdit: CalendarEvent | null;
+  startEditing: (event: CalendarEvent) => void;
+  stopEditing: () => void;
+}
+
+const CalendarContext = createContext<ExtendedCalendarContextType | undefined>(undefined);
 
 export const useCalendar = () => {
   const context = useContext(CalendarContext);
@@ -35,6 +43,10 @@ export const CalendarProvider = ({
   const [currentDate, setCurrentDate] = useState<Date>(initialDate);
   const [mounted, setMounted] = useState(false);
   const lastNotifiedDateRef = React.useRef<string>(initialDate.toISOString());
+
+  // State for event editing modal
+  const [isEditing, setIsEditing] = useState(false);
+  const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null);
 
   // On mount, check localStorage for saved view preference
   useEffect(() => {
@@ -99,13 +111,25 @@ export const CalendarProvider = ({
     setEvents(events.map(event => 
       event.id === updatedEvent.id ? updatedEvent : event
     ));
+    stopEditing(); // Close modal on successful update
   };
 
   const deleteEvent = (id: string) => {
     setEvents(events.filter(event => event.id !== id));
   };
 
-  const value = {
+  // Functions to control editing state
+  const startEditing = (event: CalendarEvent) => {
+    setEventToEdit(event);
+    setIsEditing(true);
+  };
+
+  const stopEditing = () => {
+    setEventToEdit(null);
+    setIsEditing(false);
+  };
+
+  const value: ExtendedCalendarContextType = {
     events,
     view,
     currentDate,
@@ -114,6 +138,11 @@ export const CalendarProvider = ({
     addEvent,
     updateEvent,
     deleteEvent,
+    // Add editing state and functions to context value
+    isEditing,
+    eventToEdit,
+    startEditing,
+    stopEditing,
   };
 
   return (

@@ -10,10 +10,20 @@ import EventForm from '../UI/EventForm';
 import { CalendarEvent, TimeSlot } from '../types';
 import { cn } from '../../../utils/cn';
 
+// Define hour height for calculations
+const HOUR_ROW_HEIGHT = 64; // Matches h-16 class (4rem = 64px)
+
 export default function WeekView() {
-  const { currentDate, events, addEvent, deleteEvent } = useCalendar();
-  const [showEventForm, setShowEventForm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const {
+    currentDate,
+    events,
+    addEvent,
+    deleteEvent,
+    startEditing,
+    isEditing,
+    eventToEdit,
+    stopEditing
+  } = useCalendar();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
   const weekDays = getDaysInWeek(currentDate);
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i);
@@ -23,6 +33,9 @@ export default function WeekView() {
   const [dragStart, setDragStart] = useState<{ y: number; time: Date } | null>(null);
   const [dragEnd, setDragEnd] = useState<{ y: number; time: Date } | null>(null);
 
+  // Ref for the scrollable container
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
   // Set a ref for current time indicator
   const nowIndicatorRef = useRef<HTMLDivElement>(null);
   
@@ -38,6 +51,33 @@ export default function WeekView() {
     
     return () => clearInterval(intervalId);
   }, []);
+  
+  // Scroll to current time or 8 AM on date change
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      let targetHour = 8; // Default scroll to 8 AM
+      
+      // Check if the current week includes today
+      const todayIsInView = weekDays.some(day => isToday(day));
+      
+      if (todayIsInView) {
+        targetHour = getHours(new Date()); // Scroll to current hour if today is in view
+      }
+      
+      // Calculate scroll position (targetHour * height per hour)
+      // Subtract half the container height to center the time roughly
+      const scrollTop = targetHour * HOUR_ROW_HEIGHT - (container.clientHeight / 2);
+      
+      // Use setTimeout to ensure the layout is stable before scrolling
+      setTimeout(() => {
+        container.scrollTo({
+          top: Math.max(0, scrollTop), // Ensure not scrolling negative
+          behavior: 'smooth'
+        });
+      }, 100); // Small delay
+    }
+  }, [currentDate, weekDays]); // Run when the date or weekDays change
   
   // Update the position of the "now" indicator
   const updateNowIndicator = () => {
@@ -95,15 +135,6 @@ export default function WeekView() {
       start: slotStart,
       end: slotEnd,
     });
-    
-    setSelectedEvent(null);
-    setShowEventForm(true);
-  };
-  
-  const handleEventEdit = (event: CalendarEvent) => {
-    setSelectedEvent(event);
-    setSelectedTimeSlot(null);
-    setShowEventForm(true);
   };
   
   const handleEventDelete = (eventId: string) => {
@@ -212,7 +243,7 @@ export default function WeekView() {
                     }
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEventEdit(event);
+                      startEditing(event);
                     }}
                   >
                     {event.title}
@@ -259,8 +290,8 @@ export default function WeekView() {
       {renderAllDayEvents()}
       
       {/* Time grid */}
-      <div className="flex-1 overflow-y-auto relative">
-        <div className="grid grid-cols-8 h-full" ref={timeGridRef}>
+      <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
+        <div className="flex" style={{ height: `${HOUR_ROW_HEIGHT * 24}px` }}>
           {/* Time labels */}
           <div className="border-r border-gray-200 dark:border-gray-700">
             {hoursOfDay.map((hour) => (
@@ -338,7 +369,7 @@ export default function WeekView() {
                       style={eventStyle}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEventEdit(event);
+                        startEditing(event);
                       }}
                     >
                       <div className="font-medium">{event.title}</div>
@@ -356,13 +387,13 @@ export default function WeekView() {
         </div>
       </div>
       
-      {/* Event form modal */}
-      {showEventForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 dark:bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      {/* Event form modal - controlled by context */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <EventForm
-            initialData={selectedEvent || undefined}
-            selectedTimeSlot={selectedTimeSlot || undefined}
-            onClose={() => setShowEventForm(false)}
+            initialData={eventToEdit || undefined}
+            selectedDate={selectedTimeSlot?.start}
+            onClose={stopEditing}
           />
         </div>
       )}

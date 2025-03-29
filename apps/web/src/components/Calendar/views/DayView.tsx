@@ -9,10 +9,20 @@ import EventForm from '../UI/EventForm';
 import { CalendarEvent, TimeSlot } from '../types';
 import { cn } from '../../../utils/cn';
 
+// Define hour height for calculations
+const HOUR_ROW_HEIGHT = 64; // Matches h-16 class (4rem = 64px)
+
 export default function DayView() {
-  const { currentDate, events, addEvent, deleteEvent } = useCalendar();
-  const [showEventForm, setShowEventForm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const {
+    currentDate,
+    events,
+    addEvent,
+    deleteEvent,
+    startEditing,
+    isEditing,
+    eventToEdit,
+    stopEditing
+  } = useCalendar();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => i);
   const timeGridRef = useRef<HTMLDivElement>(null);
@@ -20,6 +30,9 @@ export default function DayView() {
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const [dragStart, setDragStart] = useState<{ y: number; time: Date } | null>(null);
   const [dragEnd, setDragEnd] = useState<{ y: number; time: Date } | null>(null);
+
+  // Ref for the scrollable container
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Set a ref for current time indicator
   const nowIndicatorRef = useRef<HTMLDivElement>(null);
@@ -36,6 +49,30 @@ export default function DayView() {
     
     return () => clearInterval(intervalId);
   }, []);
+  
+  // Scroll to current time or 8 AM on date change
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      let targetHour = 8; // Default scroll to 8 AM
+      
+      if (isToday(currentDate)) {
+        targetHour = getHours(new Date()); // Scroll to current hour if today
+      }
+      
+      // Calculate scroll position (targetHour * height per hour)
+      // Subtract half the container height to center the time roughly
+      const scrollTop = targetHour * HOUR_ROW_HEIGHT - (container.clientHeight / 2);
+      
+      // Use setTimeout to ensure the layout is stable before scrolling
+      setTimeout(() => {
+        container.scrollTo({
+          top: Math.max(0, scrollTop), // Ensure not scrolling negative
+          behavior: 'smooth'
+        });
+      }, 100); // Small delay
+    }
+  }, [currentDate]); // Run when the date changes
   
   // Update the position of the "now" indicator
   const updateNowIndicator = () => {
@@ -98,15 +135,6 @@ export default function DayView() {
       start: slotStart,
       end: slotEnd,
     });
-    
-    setSelectedEvent(null);
-    setShowEventForm(true);
-  };
-  
-  const handleEventClick = (event: CalendarEvent) => {
-    setSelectedEvent(event);
-    setSelectedTimeSlot(null);
-    setShowEventForm(true);
   };
   
   const handleEventDelete = (eventId: string) => {
@@ -170,13 +198,10 @@ export default function DayView() {
         end: endTime,
       });
       
-      setSelectedEvent(null);
-      setShowEventForm(true);
+      setIsCreatingEvent(false);
+      setDragStart(null);
+      setDragEnd(null);
     }
-    
-    setIsCreatingEvent(false);
-    setDragStart(null);
-    setDragEnd(null);
   };
   
   const renderAllDayEvents = () => {
@@ -196,7 +221,7 @@ export default function DayView() {
                 `border-[${event.calendar.color}] bg-${event.calendar.color}/10 text-${event.calendar.color}/90` : 
                 'border-blue-500 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300'}`
               }
-              onClick={() => handleEventClick(event)}
+              onClick={() => startEditing(event)}
             >
               {event.title}
             </div>
@@ -227,7 +252,7 @@ export default function DayView() {
       {renderAllDayEvents()}
       
       {/* Time grid */}
-      <div className="flex-1 overflow-y-auto relative">
+      <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
         <div className="grid grid-cols-7 h-full" ref={timeGridRef}>
           {/* Time labels */}
           <div className="border-r border-gray-200 dark:border-gray-700">
@@ -299,8 +324,12 @@ export default function DayView() {
                       `border-[${event.calendar.color}] bg-${event.calendar.color}/10 text-${event.calendar.color}/90` : 
                       'border-blue-500 bg-white dark:bg-gray-800 shadow text-blue-800 dark:text-blue-300'}`
                     }
-                    style={eventStyle}
-                    onClick={() => handleEventClick(event)}
+                    style={{
+                      ...eventStyle,
+                      backgroundColor: event.calendar?.color || '#3b82f6',
+                      borderColor: event.calendar?.color ? darkenColor(event.calendar.color, 20) : '#2563eb',
+                    }}
+                    onClick={() => startEditing(event)}
                   >
                     <div className="font-medium">{event.title}</div>
                     {eventStyle.height && parseFloat(eventStyle.height.toString()) > 5 && (
@@ -316,13 +345,13 @@ export default function DayView() {
         </div>
       </div>
       
-      {/* Event form modal */}
-      {showEventForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 dark:bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      {/* Event form modal - controlled by context */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <EventForm
-            initialData={selectedEvent || undefined}
-            selectedDate={selectedTimeSlot ? selectedTimeSlot.start : undefined}
-            onClose={() => setShowEventForm(false)}
+            initialData={eventToEdit || undefined}
+            selectedDate={selectedTimeSlot?.start}
+            onClose={stopEditing}
           />
         </div>
       )}

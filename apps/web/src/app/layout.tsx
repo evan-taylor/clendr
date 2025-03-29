@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   title: 'Clendr - The Lightning-Fast AI-Powered Calendar App',
   description: 'Transform how you schedule your time with Clendr, the intelligent calendar app that helps you manage your schedule effortlessly.',
   keywords: ['calendar', 'scheduling', 'ai', 'productivity', 'time management'],
-  manifest: '/manifest.json',
+  manifest: '/site.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -51,12 +51,14 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/images/favicon.ico', sizes: '32x32' },
-      { url: '/images/icons/icon-192x192.png', sizes: '192x192' },
-      { url: '/images/icons/icon-512x512.png', sizes: '512x512' },
+      { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/images/icons/apple-icon-180x180.png', sizes: '180x180' },
+      { url: '/apple-touch-icon.png', type: 'image/png' },
     ],
   },
 };

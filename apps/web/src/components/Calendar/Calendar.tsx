@@ -49,6 +49,8 @@ import {
 } from '@/lib/googleCalendar';
 import GoogleCalendarConnect from './GoogleCalendarConnect';
 import CalendarSkeleton from './CalendarSkeleton';
+import Image from 'next/image';
+
 type CalendarProps = {
   initialEvents?: CalendarEvent[];
   initialView?: ViewType;
@@ -121,9 +123,23 @@ function AppHeader({
     }
   };
 
+  // Determine logo based on theme
+  const logoSrc = mounted && theme === 'dark' ? '/clendr-white.png' : '/clendr-black.png';
+
   return (
     <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-gray-200 dark:border-neutral-900 bg-white dark:bg-neutral-950">
       <div className="flex items-center">
+        {mounted && (
+          <div className="mr-4 flex items-center"> 
+             <Image 
+               src={logoSrc} 
+               alt="Clendr Logo" 
+               width={80}
+               height={24}
+               priority
+             />
+          </div>
+        )}
         <div className="flex items-center space-x-3">
           <button
             onClick={goToToday}
@@ -371,7 +387,7 @@ export default function Calendar({
     };
     
     fetchEvents();
-  }, [user?.id, dateRange, session?.provider_token]);
+  }, [user?.id, dateRange]);
   
   // Update event handler to keep parent component in sync
   useEffect(() => {

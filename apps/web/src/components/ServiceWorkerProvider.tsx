@@ -7,7 +7,7 @@ import { addNotification } from '@/store/slices/uiSlice';
 
 interface ServiceWorkerProviderProps {
   children: ReactNode;
-}
+} 
 
 export const ServiceWorkerProvider: FC<ServiceWorkerProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
